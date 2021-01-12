@@ -13,9 +13,10 @@ const useStyle = makeStyles((theme) => ({
     marginLeft: theme.spacing(5),
     backgroundColor: "#F0E9E1",
     borderRadius: theme.spacing(5),
-    padding: `0px ${theme.spacing(2)}px`,
+    padding: `0px ${theme.spacing(4)}px`,
     paddingTop: "5px",
     paddingBottom: "5px",
+    textTransform: "uppercase",
   },
 }));
 

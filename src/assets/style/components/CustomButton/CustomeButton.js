@@ -2,18 +2,26 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    // padding: "5px 40px",
-    width: "100px",
     minHeight: "auto",
     minWidth: "auto",
-    position: "relative",
-    lineHeight: "1.4",
+    borderRadius: "6px",
+    padding: "5px 25px",
+    margin: "15px 25px",
+    textTransform: "none",
+    // fontFamily: "Quicksand, sans-serif !important",
   },
   backgroundBrownLight: {
     backgroundColor: "red",
   },
   backgroundBrownDark: {
     backgroundColor: "orange",
+  },
+  yellow: {
+    backgroundColor: "#FFDF9B",
+  },
+
+  borderGray: {
+    border: "2px solid #f4f4f4",
   },
 }));
 
