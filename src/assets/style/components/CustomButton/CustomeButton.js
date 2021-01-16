@@ -10,6 +10,9 @@ const useStyle = makeStyles((theme) => ({
     textTransform: "none",
     // fontFamily: "Quicksand, sans-serif !important",
   },
+  navLink: {
+    textDecoration: "none",
+  },
   backgroundBrownLight: {
     backgroundColor: "red",
   },

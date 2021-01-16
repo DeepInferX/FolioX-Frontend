@@ -9,8 +9,8 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route exact path="/" component={GetStarted} />
-          <Route path="/landing" component={Landing} />
+          <Route exact path="/" component={Landing} />
+          <Route path="/get-started" component={GetStarted} />
           <Route path="/admin-option" component={AdminOption} />
 
           {/* <Route path="/email-verify-success" component={EmailVerifySuccess} /> */}

@@ -2,13 +2,37 @@ import { Button } from "@material-ui/core";
 import React from "react";
 import useStyle from "assets/style/components/CustomButton/CustomeButton";
 import classNames from "classnames";
-export default function CustomButton({ text, logo, yellow, border, ...rest }) {
+import { NavLink } from "react-router-dom";
+import Navbar from "components/Navbar/Navbar";
+export default function CustomButton({
+  text,
+  logo,
+  to,
+  yellow,
+  border,
+  ...rest
+}) {
   const classes = useStyle();
   const buttonClasses = classNames({
     [classes[border]]: border,
     [classes.yellow]: yellow,
     [classes.root]: true,
   });
+
+  if (to) {
+    return (
+      <NavLink to={to} className={classes.navLink}>
+        <Button
+          {...rest}
+          className={buttonClasses}
+          style={{ fontFamily: "Quicksand, sans-serif !important" }}
+        >
+          {logo}
+          {text}
+        </Button>
+      </NavLink>
+    );
+  }
   return (
     <Button
       {...rest}

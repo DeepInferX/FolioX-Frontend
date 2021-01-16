@@ -5,6 +5,7 @@ import Navbar from "components/Navbar/Navbar";
 import fx from "assets/logo/fx.png";
 import HeroImg from "assets/img/landing.png";
 import CustomButton from "components/CustomButton/CustomButton";
+import { NavLink } from "react-router-dom";
 
 export default function Landing() {
   const classes = useStyle();
@@ -15,7 +16,7 @@ export default function Landing() {
         <h1 className={classes.title}>
           Apply for jobs <br /> in a click.
         </h1>
-        <CustomButton text={"Get Started"} yellow />
+        <CustomButton text={"Get Started"} to={"/get-started/"} yellow />
         <CustomButton text={"Get App"} logo={circle} border="borderGray" />
       </div>
     );
