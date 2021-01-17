@@ -4,6 +4,7 @@ import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import Landing from "pages/Landing/Landing";
 import GetStarted from "pages/GetStarted/GetStarted";
 import AdminOption from "pages/AdminOption/AdminOption";
+import AdminRegister from "pages/AdminRegister/AdminRegister";
 function App() {
   return (
     <div className="App">
@@ -12,6 +13,7 @@ function App() {
           <Route exact path="/" component={Landing} />
           <Route path="/get-started" component={GetStarted} />
           <Route path="/admin-option" component={AdminOption} />
+          <Route path="/admin-register" component={AdminRegister} />
 
           {/* <Route path="/email-verify-success" component={EmailVerifySuccess} /> */}
         </Switch>

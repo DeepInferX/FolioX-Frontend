@@ -6,7 +6,7 @@ const useStyle = makeStyles((theme) => ({
     minWidth: "auto",
     borderRadius: "6px",
     padding: "5px 25px",
-    margin: "15px 25px",
+    margin: "15px 25px 15px 0px",
     textTransform: "none",
     // fontFamily: "Quicksand, sans-serif !important",
   },
@@ -19,8 +19,15 @@ const useStyle = makeStyles((theme) => ({
   backgroundBrownDark: {
     backgroundColor: "orange",
   },
+
   yellow: {
     backgroundColor: "#FFDF9B",
+  },
+  white: {
+    backgroundColor: "#fff",
+  },
+  brown: {
+    backgroundColor: "#DB9696",
   },
 
   borderGray: {

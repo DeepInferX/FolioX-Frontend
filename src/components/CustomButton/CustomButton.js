@@ -3,22 +3,22 @@ import React from "react";
 import useStyle from "assets/style/components/CustomButton/CustomeButton";
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
-import Navbar from "components/Navbar/Navbar";
+// import Navbar from "components/Navbar/Navbar";
 export default function CustomButton({
   text,
   logo,
   to,
-  yellow,
+  background,
   border,
   ...rest
 }) {
   const classes = useStyle();
   const buttonClasses = classNames({
     [classes[border]]: border,
-    [classes.yellow]: yellow,
+    [classes[background]]: true,
     [classes.root]: true,
   });
-
+  console.log(background);
   if (to) {
     return (
       <NavLink to={to} className={classes.navLink}>

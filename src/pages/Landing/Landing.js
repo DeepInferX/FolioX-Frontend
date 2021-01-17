@@ -16,7 +16,11 @@ export default function Landing() {
         <h1 className={classes.title}>
           Apply for jobs <br /> in a click.
         </h1>
-        <CustomButton text={"Get Started"} to={"/get-started/"} yellow />
+        <CustomButton
+          text={"Get Started"}
+          to={"/get-started/"}
+          background="yellow"
+        />
         <CustomButton text={"Get App"} logo={circle} border="borderGray" />
       </div>
     );
