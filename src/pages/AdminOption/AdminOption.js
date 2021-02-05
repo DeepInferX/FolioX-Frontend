@@ -38,8 +38,8 @@ export default function Landing() {
             Please select any one.
           </Typography>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Card Img={Register} text={"Register"} to="#" />
-            <Card Img={Login} text={"Login"} to="#" />
+            <Card Img={Register} text={"Register"} to="/admin-register" />
+            <Card Img={Login} text={"Login"} to="/admin-login" />
           </div>
         </Grid>
       </Grid>

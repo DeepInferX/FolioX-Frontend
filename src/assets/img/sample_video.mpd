@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:cenc="urn:mpeg:cenc:2013" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd" type="static" minBufferTime="PT3S" profiles="urn:mpeg:dash:profile:isoff-main:2011" mediaPresentationDuration="PT1M37.958S">
+  <Period start="PT0S" duration="PT1M37.958S" id="1">
+    <AdaptationSet mimeType="video/mp4" frameRate="24/1" segmentAlignment="true" subsegmentAlignment="true" startWithSAP="1" subsegmentStartsWithSAP="1" bitstreamSwitching="false">
+      <SegmentTemplate timescale="90000" media="sample_video_Ott_Dash_Mp4_Hevc_16x9_1920x1080p_24Hz_6000Kbps_$Number%09d$.mp4" initialization="sample_video_Ott_Dash_Mp4_Hevc_16x9_1920x1080p_24Hz_6000Kbpsinit.mp4" duration="270000" startNumber="1"/>
+      <Representation id="1" width="1920" height="1080" bandwidth="6000000" codecs="hev1.1.6.L120.B0"/>
+    </AdaptationSet>
+    <AdaptationSet mimeType="audio/mp4" lang="und" segmentAlignment="0">
+      <SegmentTemplate timescale="24000" media="sample_video_Ott_Dash_Mp4_Aac_He_96Kbps_$Number%09d$.mp4" initialization="sample_video_Ott_Dash_Mp4_Aac_He_96Kbpsinit.mp4" duration="72000" startNumber="1"/>
+      <Representation id="2" bandwidth="96000" audioSamplingRate="48000" codecs="mp4a.40.5"/>
+    </AdaptationSet>
+  </Period>
+</MPD>

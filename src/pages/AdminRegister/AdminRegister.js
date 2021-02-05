@@ -2,7 +2,6 @@ import { Grid } from "@material-ui/core";
 import React from "react";
 import Navbar from "components/Navbar/Navbar";
 import fx from "assets/logo/fx.png";
-// import useStyles from "assets/style/pages/GetStarted/GetStarted";
 import Typography from "components/CustomTypography/Typography";
 import useStyles from "assets/style/pages/AdminRegister/AdminRegister";
 import CustomInput from "components/CustomInput/CustomInput";
@@ -26,7 +25,7 @@ export default function Landing() {
           </Grid>
           <Grid item xs={12} className={classes.title}>
             <Typography
-              variant="h6"
+              variant="h4"
               align="center"
               component="p"
               fontWeight="800"
