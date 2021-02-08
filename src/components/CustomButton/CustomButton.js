@@ -18,7 +18,6 @@ export default function CustomButton({
     [classes[background]]: true,
     [classes.root]: true,
   });
-  console.log(background);
   if (to) {
     return (
       <NavLink to={to} className={classes.navLink}>

@@ -1,11 +1,10 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import React from "react";
 import useStyle from "assets/style/pages/Landing/Landing";
 import Navbar from "components/Navbar/Navbar";
 import fx from "assets/logo/fx.png";
 import HeroImg from "assets/img/landing.png";
 import CustomButton from "components/CustomButton/CustomButton";
-import { NavLink } from "react-router-dom";
 
 export default function Landing() {
   const classes = useStyle();
@@ -37,7 +36,7 @@ export default function Landing() {
             <LandingLeft />
           </Grid>
           <Grid item xs={6} className={classes.img}>
-            <img src={HeroImg} width="60%" />
+            <img src={HeroImg} width="60%" alt="hero imge" />
           </Grid>
         </Grid>
       </Grid>

@@ -38,7 +38,7 @@ export default function Landing() {
             Continue as?
           </Typography>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Card Img={Teacher} text={"Teacher/Admin"} to="/admin-option/" />
+            <Card Img={Teacher} text={"Teacher/Admin"} to="/admin/option/" />
             <Card Img={Student} text={"Student"} to="#" />
           </div>
         </Grid>

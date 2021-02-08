@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import classNames from "classnames";
 import useStyle from "assets/style/components/Navbar/Navbar";
 export default function Navbar({ logo, appbar }) {
@@ -11,16 +11,18 @@ export default function Navbar({ logo, appbar }) {
       </div>
       {appbar && (
         <div>
-          <NavLink className={classes.navLink} to="#">
+          <NavLink className={classes.navLink} to="/">
             Contact
           </NavLink>
-          <NavLink
+          <a
             className={classNames(classes.navLink, classes.navLinkButton)}
-            to="#"
+            href="http://deepinferx.in/"
+            target="_blank"
+            rel="noreferrer"
           >
             {" "}
             Dix
-          </NavLink>
+          </a>
         </div>
       )}
     </div>

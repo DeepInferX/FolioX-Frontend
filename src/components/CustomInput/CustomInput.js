@@ -1,4 +1,3 @@
-import { InputBase } from "@material-ui/core";
 import React from "react";
 import useStyles from "assets/style/components/CustomInput/CustomInput";
 import classNames from "classnames";
