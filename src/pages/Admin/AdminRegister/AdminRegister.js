@@ -77,7 +77,6 @@ export default function Landing(props) {
    */
 
   const submitHandler = (e) => {
-    console.log("hi");
     e.preventDefault();
     setName((name) => name.trim());
     setEmail((email) => email.trim());
@@ -117,15 +116,10 @@ export default function Landing(props) {
 
         //if success = 1 Registeration successfull
         if (success === 1) {
-          console.log(props);
           props.history.push("/admin/registration-confirmation-overlay");
         }
-
-        console.log(res.data);
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch((e) => {});
   };
 
   const classes = useStyles();
@@ -286,7 +280,7 @@ export default function Landing(props) {
               <CustomButton
                 text={"Login"}
                 logo={circle}
-                to={"/get-started/"}
+                to={"/admin/login"}
                 background="white"
                 border="borderGray"
               />

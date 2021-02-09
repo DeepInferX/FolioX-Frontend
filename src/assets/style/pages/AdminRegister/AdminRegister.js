@@ -2,7 +2,8 @@ const { makeStyles } = require("@material-ui/core");
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#F0E9E1",
+    backgroundImage:
+      "linear-gradient(160deg, #F0E9E1 30%, white 30%, white 31%,   #DB9696 31%)",
     padding: "0px 7vh",
     height: "100vh",
   },
