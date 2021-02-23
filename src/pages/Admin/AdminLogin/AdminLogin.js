@@ -12,7 +12,8 @@ import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { adminContext } from "pages/Admin/index";
+import { adminContext } from "pages/Admin/AdminContext";
+import { Navigate } from "react-router-dom";
 const circle = <span>&#9675;&nbsp;</span>;
 
 export default function Landing() {
@@ -25,7 +26,6 @@ export default function Landing() {
   });
 
   const { admin, setAdmin } = useContext(adminContext);
-  console.log(admin);
 
   //Api call to get list of registered colleges
   useEffect(() => {
@@ -82,6 +82,10 @@ export default function Landing() {
       progress: undefined,
     });
 
+  // const Navigate = useNavigate();
+  if (admin) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
   return (
     <form onSubmit={submitHandler}>
       <ToastContainer
