@@ -1,11 +1,28 @@
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import Navbar from "components/Navbar/Navbar";
 import fx from "assets/logo/fx.png";
 import Card from "components/Card/Card";
 import Teacher from "assets/img/teacherAdmin.png";
 import Student from "assets/img/student.png";
-import useStyles from "assets/style/pages/GetStarted/GetStarted";
+
+//style
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: "#F0E9E1",
+    padding: "0px 7vh",
+    height: "100vh",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0px 3vh",
+    },
+  },
+  text: {
+    fontFamily: "Quicksand, sans-serif !important",
+    fontWeight: "500",
+  },
+  
+}));
+
 export default function Landing() {
   const classes = useStyles();
   return (
@@ -37,10 +54,10 @@ export default function Landing() {
           >
             Continue as?
           </Typography>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <Grid className={classes.cardContainer}>
             <Card Img={Teacher} text={"Teacher/Admin"} to="/admin/option/" />
             <Card Img={Student} text={"Student"} to="#" />
-          </div>
+          </Grid>
         </Grid>
       </Grid>
     </div>
