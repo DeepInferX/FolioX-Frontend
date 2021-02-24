@@ -20,7 +20,13 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Quicksand, sans-serif !important",
     fontWeight: "500",
   },
-  
+  cardContainer: {
+    display: "flex",
+    justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
 }));
 
 export default function Landing() {

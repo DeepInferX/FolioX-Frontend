@@ -1,22 +1,38 @@
-import { Grid } from "@material-ui/core";
 import React, { useEffect, useContext } from "react";
-import Navbar from "components/Navbar/Navbar";
-import fx from "assets/logo/fx.png";
-import Typography from "components/CustomTypography/Typography";
-import useStyles from "assets/style/pages/AdminLogin";
-import CustomInput from "components/CustomInput/CustomInput";
-import CustomButton from "components/CustomButton/CustomButton";
-import image from "assets/img/admin-login-image.svg";
-import Select from "components/Select/Select";
 import { useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { adminContext } from "pages/Admin/AdminContext";
+import { ToastContainer, toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
+
+//@material-ui core components
+import { Grid, makeStyles } from "@material-ui/core";
+
+import Typography from "components/CustomTypography/Typography";
+import CustomInput from "components/CustomInput/CustomInput";
+import CustomButton from "components/CustomButton/CustomButton";
+import Navbar from "components/Navbar/Navbar";
+import Select from "components/Select/Select";
+import { adminContext } from "pages/Admin/AdminContext";
+
+import fx from "assets/logo/fx.png";
+import image from "assets/img/admin-login-image.svg";
+
 const circle = <span>&#9675;&nbsp;</span>;
 
+//style
+const useStyle = makeStyles((theme) => ({
+  root: {
+    minHeight: "100vh",
+  },
+  form: {
+    flexGrow: 1,
+  },
+}));
+
 export default function Landing() {
+  const classes = useStyle();
+
   const [selectedCollege, setSelectedCollege] = useState("");
   const [collegeList, setCollegeList] = useState([]);
   const [error, setError] = useState({ message: "" });
@@ -68,8 +84,6 @@ export default function Landing() {
       }, []);
   };
 
-  const classes = useStyles();
-
   //Toast Notification for showing error to users
   const errorNotification = () =>
     toast.error(error.message, {
@@ -97,12 +111,7 @@ export default function Landing() {
         pauseOnFocusLoss
         draggable
       />
-      <Grid
-        className={classes.main}
-        container
-        direction="column"
-        style={{ minHeight: "100vh" }}
-      >
+      <Grid className={classes.root} container direction="column">
         <Grid item style={{ height: "100px" }}>
           <Navbar logo={fx} />
         </Grid>
@@ -118,17 +127,17 @@ export default function Landing() {
         </Grid>
         <Grid
           item
+          container
           justify="space-around"
           alignItems="center"
-          style={{ flexGrow: "1" }}
-          container
+          className={classes.form}
           direction="row"
         >
-          <Grid item xs={4}>
+          <Grid item xs={10} sm={4}>
             <Select
               background="brown"
-              selectedCollege={selectedCollege}
-              setSelectedCollege={setSelectedCollege}
+              value={selectedCollege}
+              changeHandler={setSelectedCollege}
               required
             >
               <option value="" disabled selected hidden>
@@ -176,7 +185,7 @@ export default function Landing() {
             <CustomButton type="submit" text={"Continue"} background="brown" />
           </Grid>
         </Grid>
-        <Grid item justify="flex-start">
+        <Grid item >
           <img src={image} width="300" alt="admin login" />
         </Grid>
       </Grid>

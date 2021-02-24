@@ -1,12 +1,7 @@
 import React from "react";
 import useStyles from "assets/style/components/Select";
 import classNames from "classnames";
-export default function Select({
-  background,
-  children,
-  selectedCollege,
-  setSelectedCollege,
-}) {
+export default function Select({ background, children, value, changeHandler }) {
   const classes = useStyles();
   const selectClasses = classNames({
     [classes.root]: true,
@@ -16,8 +11,8 @@ export default function Select({
     <div>
       <select
         className={selectClasses}
-        onChange={(e) => setSelectedCollege(e.target.value)}
-        value={selectedCollege}
+        onChange={(e) => changeHandler(e.target.value)}
+        value={value}
       >
         {children}
       </select>
