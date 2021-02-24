@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import useStyle from "assets/style/components/Navbar/Navbar";
 export default function Navbar({ logo, appbar }) {

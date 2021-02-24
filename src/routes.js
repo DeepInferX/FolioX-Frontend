@@ -1,4 +1,3 @@
-// const { default: Landing } = require("pages/Landing/Landing");
 import Landing from "pages/Landing/Landing";
 import GetStarted from "pages/GetStarted/GetStarted";
 import AdminLogin from "pages/Admin/AdminLogin/AdminLogin";
@@ -8,6 +7,7 @@ import AdminRegistrationOverlay from "pages/Admin/AdminRegister/RegistrationOver
 import AdminContext from "pages/Admin/AdminContext";
 import Dashboard from "pages/Admin/Dashboard/DashboardLayout";
 import DashboardHome from "pages/Admin/Dashboard/view/Home";
+
 const routes = [
   {
     path: "/",
