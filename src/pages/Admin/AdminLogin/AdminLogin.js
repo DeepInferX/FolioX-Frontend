@@ -26,6 +26,8 @@ import { collgeList } from "store/college";
 
 const circle = <span>&#9675;&nbsp;</span>;
 
+
+
 //style
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -36,59 +38,32 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function Landing() {
   const classes = useStyle();
   const dispatch = useDispatch();
 
+  const auth_token = useSelector(store => store.auth.user.auth_token)
   const collegeList = useSelector((store) => store.college.list);
-  const isLoading = useSelector((store) => store.college.isLoading);
-  const [error, setError] = useState({ message: "" });
+  const isLoading = useSelector((store) => store.college.isLoading || store.auth.isLoading);
+  const message = useSelector(store => store.message)
+
   const [loginCredentials, setLoginCredentials] = useState({
     email: "",
     password: "",
     college_id: "",
   });
 
+
+
   const setSelectedCollege = (e) => {
-    setLoginCredentials(e.target.value);
-  };
-
-  const { admin, setAdmin } = useContext(adminContext);
-
-  //Dispatch action  to fetch list of registered colleges
-  useEffect(() => {
-    dispatch(collgeList.fetch());
-  }, []);
-
-  //Error Notification handler
-  useEffect(() => {
-    error.message.length > 0 && errorNotification();
-  }, [error.message]);
-
-  //Form submit handler
-  const submitHandler = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("college_id", loginCredentials.college_id);
-    formData.append("email", loginCredentials.email);
-    formData.append("password", loginCredentials.password);
-
-    axios
-      .post("http://foliox.deepinferx.in/web/api/admin/login", formData)
-      .then((res) => {
-        const { success } = res.data;
-        if (success === 1) {
-          setAdmin(res.data);
-        }
-        if (success === 0) {
-          setError({ ...error, message: res.data.message });
-        }
-      }, []);
+    setLoginCredentials({...loginCredentials, college_id: e.target.value});
   };
 
   //Toast Notification for showing error to users
   const errorNotification = () =>
-    toast.error(error.message, {
+    toast.error(message.error, {
       position: "bottom-center",
       autoClose: false,
       hideProgressBar: true,
@@ -98,15 +73,50 @@ export default function Landing() {
       progress: undefined,
     });
 
+    
+  const { admin, setAdmin } = useContext(adminContext);
+
+
+
+  //Dispatch action  to fetch list of registered colleges
+  useEffect(() => {
+    dispatch(collgeList.fetch());
+  }, []);
+
+  //Error Notification handler
+  useEffect(() => {
+    message.error.length > 0 && errorNotification();
+  }, [message]);
+
+  //Form submit handler
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("college_id", loginCredentials.college_id);
+    formData.append("email", loginCredentials.email);
+    formData.append("password", loginCredentials.password);
+
+    dispatch(auth.login(formData))
+
+    //reset local state
+    setLoginCredentials({
+      email:"",
+      password:"",
+      college_id:""
+    })
+    
+  };
+
+  
+
   // const Navigate = useNavigate();
-  if (admin) {
+  if (auth_token) {
     return <Navigate to="/admin/dashboard" replace />;
   }
   return (
     <>
-      <LoadingSpinner open={isLoading} />
-      <form onSubmit={submitHandler}>
-        <ToastContainer
+      <LoadingSpinner open={ isLoading } />
+      <ToastContainer
           position="bottom-center"
           autoClose={false}
           newestOnTop
@@ -115,6 +125,8 @@ export default function Landing() {
           pauseOnFocusLoss
           draggable
         />
+      <form onSubmit={submitHandler}>
+        
         <Grid className={classes.root} container direction="column">
           <Grid item style={{ height: "100px" }}>
             <Navbar logo={fx} />
@@ -144,7 +156,7 @@ export default function Landing() {
                 changeHandler={setSelectedCollege}
                 required
               >
-                <option value="" disabled selected hidden>
+                <option value="" disabled  hidden>
                   Select college
                 </option>
                 {collegeList.map((college) => (
@@ -171,6 +183,7 @@ export default function Landing() {
                 background="brown"
                 fullWidth
                 required
+                type="password"
                 value={loginCredentials.password}
                 onChange={(e) =>
                   setLoginCredentials({

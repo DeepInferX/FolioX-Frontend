@@ -1,5 +1,5 @@
 import axios from "axios";
-import {} from "store/message";
+import {message} from "store/message";
 //constant
 const LOGIN_REQUEST = "LOGIN_REQUEST";
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -7,28 +7,42 @@ const LOGIN_FAILED = "LOGIN_FAILED";
 
 //action creater
 
-const login = (user) => {
-  return async (dispatch) => {
-    dispatch(LOGIN_REQUEST);
-    try {
-      const { data } = await axios.post(
-        "http://foliox.deepinferx.in/web/api/admin/login",
-        user
-      );
 
-      //success
-      if (data.success === 1) {
-        dispatch(LOGIN_SUCCESS);
+  const login =  (user) => {
+    return async (dispatch) => {
+      dispatch({
+        type: LOGIN_REQUEST
+      });
+      try {
+        const { data } = await axios.post(
+          "http://foliox.deepinferx.in/web/api/admin/login",
+          user
+        );
+        //success
+        if (data.success === 1) {
+          delete data.success
+          dispatch({type: LOGIN_SUCCESS, payload: data});
+          
+        }
+        //failed
+        if(data.success === 0){
+          throw  (data.message)          
+        }
+      } catch (error) {
+        console.log(error)
+        dispatch({type: LOGIN_FAILED});
+        dispatch(message.error(error))
       }
-    } catch (error) {
-      dispatch(LOGIN_FAILED);
-    }
+    };
   };
-};
+
+  // cosnt logout = () => {}
+
+
 
 const register = (newUser) => {};
 
-const logout = () => {};
+
 
 //Reducer
 
@@ -63,6 +77,6 @@ const authReducer = (state = initialAuthState, action) => {
   }
 };
 
-export { login, register, logout };
+export { login, register };
 
 export default authReducer;

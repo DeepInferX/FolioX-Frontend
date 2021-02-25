@@ -24,16 +24,9 @@ const routes = [
       { path: "login", element: <AdminLogin /> },
       { path: "register", element: <AdminRegister /> },
       { path: "option", element: <AdminOption /> },
-      {
-        path: "registration-confirm-overlay",
-        element: <AdminRegistrationOverlay />,
-      },
-      {
-        path: "dashboard",
-        element: (
-            <Dashboard />
-        ),
-        children: [{ path: "/", element: <DashboardHome /> }],
+      { path: "registration-confirm-overlay", element: <AdminRegistrationOverlay />},
+      { path: "dashboard", element: ( <Dashboard /> ),
+       children: [{ path: "/", element: <DashboardHome /> }]
       },
     ],
   },

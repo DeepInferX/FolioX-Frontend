@@ -42,6 +42,7 @@ const messageReducer = (state = initialMessageState, action) => {
       return {
         error: action.payload,
       };
+      
     case MESSAGE_CLEAR:
       return {};
 
@@ -50,6 +51,6 @@ const messageReducer = (state = initialMessageState, action) => {
   }
 };
 
-export { success, error, clear };
 
 export default messageReducer;
+export {message};
