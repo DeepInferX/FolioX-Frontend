@@ -4,6 +4,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 //@material-ui core components
 import { Grid, makeStyles } from "@material-ui/core";
@@ -14,9 +15,14 @@ import CustomButton from "components/CustomButton/CustomButton";
 import Navbar from "components/Navbar/Navbar";
 import Select from "components/Select/Select";
 import { adminContext } from "pages/Admin/AdminContext";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 
 import fx from "assets/logo/fx.png";
 import image from "assets/img/admin-login-image.svg";
+
+//action creater
+import * as auth from "store/auth";
+import { collgeList } from "store/college";
 
 const circle = <span>&#9675;&nbsp;</span>;
 
@@ -32,30 +38,26 @@ const useStyle = makeStyles((theme) => ({
 
 export default function Landing() {
   const classes = useStyle();
+  const dispatch = useDispatch();
 
-  const [selectedCollege, setSelectedCollege] = useState("");
-  const [collegeList, setCollegeList] = useState([]);
+  const collegeList = useSelector((store) => store.college.list);
+  const isLoading = useSelector((store) => store.college.isLoading);
   const [error, setError] = useState({ message: "" });
   const [loginCredentials, setLoginCredentials] = useState({
     email: "",
     password: "",
+    college_id: "",
   });
+
+  const setSelectedCollege = (e) => {
+    setLoginCredentials(e.target.value);
+  };
 
   const { admin, setAdmin } = useContext(adminContext);
 
-  //Api call to get list of registered colleges
+  //Dispatch action  to fetch list of registered colleges
   useEffect(() => {
-    axios
-      .get("http://foliox.deepinferx.in/web/api/gen/colleges")
-      .then((res) => {
-        const { success } = res.data;
-        if (success === 1) {
-          setCollegeList(res.data.colleges);
-        } else {
-          setError({ ...error, message: "Something went wrong!" });
-        }
-      })
-      .catch((e) => console.log(e));
+    dispatch(collgeList.fetch());
   }, []);
 
   //Error Notification handler
@@ -67,7 +69,7 @@ export default function Landing() {
   const submitHandler = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("college_id", selectedCollege);
+    formData.append("college_id", loginCredentials.college_id);
     formData.append("email", loginCredentials.email);
     formData.append("password", loginCredentials.password);
 
@@ -101,94 +103,101 @@ export default function Landing() {
     return <Navigate to="/admin/dashboard" replace />;
   }
   return (
-    <form onSubmit={submitHandler}>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-      />
-      <Grid className={classes.root} container direction="column">
-        <Grid item style={{ height: "100px" }}>
-          <Navbar logo={fx} />
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="h4"
-            align="center"
-            component="p"
-            fontWeight="800"
-          >
-            Please enter your credentials
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          container
-          justify="space-around"
-          alignItems="center"
-          className={classes.form}
-          direction="row"
-        >
-          <Grid item xs={10} sm={4}>
-            <Select
-              background="brown"
-              value={selectedCollege}
-              changeHandler={setSelectedCollege}
-              required
+    <>
+      <LoadingSpinner open={isLoading} />
+      <form onSubmit={submitHandler}>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
+        <Grid className={classes.root} container direction="column">
+          <Grid item style={{ height: "100px" }}>
+            <Navbar logo={fx} />
+          </Grid>
+          <Grid item>
+            <Typography
+              variant="h4"
+              align="center"
+              component="p"
+              fontWeight="800"
             >
-              <option value="" disabled selected hidden>
-                Select college
-              </option>
-              {collegeList.map((college) => (
-                <option key={college.id} value={college.id}>
-                  {college.college_name}
+              Please enter your credentials
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            container
+            justify="space-around"
+            alignItems="center"
+            className={classes.form}
+            direction="row"
+          >
+            <Grid item xs={10} sm={4}>
+              <Select
+                background="brown"
+                value={loginCredentials.college_id}
+                changeHandler={setSelectedCollege}
+                required
+              >
+                <option value="" disabled selected hidden>
+                  Select college
                 </option>
-              ))}
-            </Select>
-            <CustomInput
-              label="Email"
-              background="brown"
-              fullWidth
-              required
-              value={loginCredentials.email}
-              onChange={(e) =>
-                setLoginCredentials({
-                  ...loginCredentials,
-                  email: e.target.value,
-                })
-              }
-            ></CustomInput>
-            <CustomInput
-              label="Password"
-              background="brown"
-              fullWidth
-              required
-              value={loginCredentials.password}
-              onChange={(e) =>
-                setLoginCredentials({
-                  ...loginCredentials,
-                  password: e.target.value,
-                })
-              }
-            ></CustomInput>
-            <CustomButton
-              text={"Forgot?"}
-              logo={circle}
-              to={"/get-started/"}
-              background="white"
-              border="borderGray"
-            />
-            <CustomButton type="submit" text={"Continue"} background="brown" />
+                {collegeList.map((college) => (
+                  <option key={college.id} value={college.id}>
+                    {college.college_name}
+                  </option>
+                ))}
+              </Select>
+              <CustomInput
+                label="Email"
+                background="brown"
+                fullWidth
+                required
+                value={loginCredentials.email}
+                onChange={(e) =>
+                  setLoginCredentials({
+                    ...loginCredentials,
+                    email: e.target.value,
+                  })
+                }
+              ></CustomInput>
+              <CustomInput
+                label="Password"
+                background="brown"
+                fullWidth
+                required
+                value={loginCredentials.password}
+                onChange={(e) =>
+                  setLoginCredentials({
+                    ...loginCredentials,
+                    password: e.target.value,
+                  })
+                }
+              ></CustomInput>
+              <CustomButton
+                text={"Forgot?"}
+                logo={circle}
+                to={"/get-started/"}
+                background="white"
+                border="borderGray"
+              />
+              <CustomButton
+                type="submit"
+                text={"Continue"}
+                background="brown"
+              />
+            </Grid>
+          </Grid>
+          <Grid item>
+            <img src={image} width="300" alt="admin login" />
           </Grid>
         </Grid>
-        <Grid item >
-          <img src={image} width="300" alt="admin login" />
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+    </>
   );
 }

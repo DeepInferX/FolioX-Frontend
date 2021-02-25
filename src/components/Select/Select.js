@@ -11,7 +11,7 @@ export default function Select({ background, children, value, changeHandler }) {
     <div>
       <select
         className={selectClasses}
-        onChange={(e) => changeHandler(e.target.value)}
+        onChange={changeHandler}
         value={value}
       >
         {children}

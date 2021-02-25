@@ -58,7 +58,7 @@ export default function Landing() {
             align="center"
             component="p"
           >
-            Continue as?
+            Continue as ?
           </Typography>
           <Grid className={classes.cardContainer}>
             <Card Img={Teacher} text={"Teacher/Admin"} to="/admin/option/" />
