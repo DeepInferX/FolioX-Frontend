@@ -1,9 +1,6 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import axios from "axios";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 //@material-ui core components
@@ -14,7 +11,6 @@ import CustomInput from "components/CustomInput/CustomInput";
 import CustomButton from "components/CustomButton/CustomButton";
 import Navbar from "components/Navbar/Navbar";
 import Select from "components/Select/Select";
-import { adminContext } from "pages/Admin/AdminContext";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 
 import fx from "assets/logo/fx.png";
@@ -36,34 +32,29 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-export default function Landing() {
+export default function AdminLogin(props) {
+  console.log("Admin Login page rendered");
   const classes = useStyle();
   const dispatch = useDispatch();
 
   const collegeList = useSelector((store) => store.college.list);
   const isLoading = useSelector((store) => store.college.isLoading);
-  const [error, setError] = useState({ message: "" });
+
   const [loginCredentials, setLoginCredentials] = useState({
-    email: "",
-    password: "",
-    college_id: "",
+    email: undefined,
+    password: undefined,
+    college_id: undefined,
   });
 
   const setSelectedCollege = (e) => {
-    setLoginCredentials(e.target.value);
+    console.log(e.target.value);
+    setLoginCredentials({ ...loginCredentials, college_id: e.target.value });
   };
-
-  const { admin, setAdmin } = useContext(adminContext);
 
   //Dispatch action  to fetch list of registered colleges
   useEffect(() => {
     dispatch(collgeList.fetch());
   }, []);
-
-  //Error Notification handler
-  useEffect(() => {
-    error.message.length > 0 && errorNotification();
-  }, [error.message]);
 
   //Form submit handler
   const submitHandler = (e) => {
@@ -72,49 +63,19 @@ export default function Landing() {
     formData.append("college_id", loginCredentials.college_id);
     formData.append("email", loginCredentials.email);
     formData.append("password", loginCredentials.password);
-
-    axios
-      .post("http://foliox.deepinferx.in/web/api/admin/login", formData)
-      .then((res) => {
-        const { success } = res.data;
-        if (success === 1) {
-          setAdmin(res.data);
-        }
-        if (success === 0) {
-          setError({ ...error, message: res.data.message });
-        }
-      }, []);
+    dispatch(auth.login(formData));
   };
 
-  //Toast Notification for showing error to users
-  const errorNotification = () =>
-    toast.error(error.message, {
-      position: "bottom-center",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  const user = useSelector((store) => store.auth.user?.auth_token);
+  const navigate = useNavigate();
 
-  // const Navigate = useNavigate();
-  if (admin) {
-    return <Navigate to="/admin/dashboard" replace />;
+  if (user) {
+    navigate("../dashboard");
   }
   return (
     <>
       <LoadingSpinner open={isLoading} />
       <form onSubmit={submitHandler}>
-        <ToastContainer
-          position="bottom-center"
-          autoClose={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-        />
         <Grid className={classes.root} container direction="column">
           <Grid item style={{ height: "100px" }}>
             <Navbar logo={fx} />
@@ -158,7 +119,7 @@ export default function Landing() {
                 background="brown"
                 fullWidth
                 required
-                value={loginCredentials.email}
+                value={loginCredentials.email || ""}
                 onChange={(e) =>
                   setLoginCredentials({
                     ...loginCredentials,
@@ -171,7 +132,8 @@ export default function Landing() {
                 background="brown"
                 fullWidth
                 required
-                value={loginCredentials.password}
+                type="password"
+                value={loginCredentials.password || ""}
                 onChange={(e) =>
                   setLoginCredentials({
                     ...loginCredentials,

@@ -4,7 +4,6 @@ import AdminLogin from "pages/Admin/AdminLogin/AdminLogin";
 import AdminRegister from "pages/Admin/AdminRegister/AdminRegister";
 import AdminOption from "pages/Admin/AdminOption/AdminOption";
 import AdminRegistrationOverlay from "pages/Admin/AdminRegister/RegistrationOverlay";
-import AdminContext from "pages/Admin/AdminContext";
 import Dashboard from "pages/Admin/Dashboard/DashboardLayout";
 import DashboardHome from "pages/Admin/Dashboard/view/Home";
 
@@ -18,7 +17,6 @@ const routes = [
   },
   {
     path: "admin",
-    element: <AdminContext />,
     children: [
       { path: "/", element: <AdminLogin /> },
       { path: "login", element: <AdminLogin /> },
@@ -30,9 +28,7 @@ const routes = [
       },
       {
         path: "dashboard",
-        element: (
-            <Dashboard />
-        ),
+        element: <Dashboard />,
         children: [{ path: "/", element: <DashboardHome /> }],
       },
     ],

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { Link as RouterLink, Navigate, useLocation } from "react-router-dom";
-import { adminContext } from "pages/Admin/AdminContext";
+// import { adminContext } from "pages/Admin/AdminContext";
 import PropTypes from "prop-types";
 import {
   Avatar,
@@ -77,7 +77,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     setOpen(!open);
   };
 
-  const { groups } = useContext(adminContext);
+  // const { groups } = useContext(adminContext);
   const classes = useStyles();
   const location = useLocation();
 
@@ -87,12 +87,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     }
   }, [location.pathname]);
 
-  const { admin } = useContext(adminContext);
-  if (!admin) {
-    return <Navigate to="/admin" />;
-  }
+  // const { admin } = useContext(adminContext);
+  // if (!admin) {
+  //   return <Navigate to="/admin" />;
+  // }
   //Admin details
-  const user = admin.user;
+  // const user = admin.user;
 
   const content = (
     <Box height="100%" display="flex" flexDirection="column">
@@ -100,17 +100,17 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         <Avatar
           className={classes.avatar}
           component={RouterLink}
-          src={user.avatar}
+          // src={user.avatar}
           to="/app/account"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
-          {user.name}
+          {/* {user.name} */}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {user.email}
+          {/* {user.email} */}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          Plan Expires On - <b>{user.plan_expire_date} </b>
+          {/* Plan Expires On - <b>{user.plan_expire_date} </b> */}
         </Typography>
       </Box>
       <Divider />
@@ -130,13 +130,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                   </ListItem>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      {groups.map((group) => (
+                      {/* {groups.map((group) => (
                         <NavItem href={group.id}>
                           <ListItem button className={classes.nested}>
                             <ListItemText primary={group.group_name} />
                           </ListItem>
                         </NavItem>
-                      ))}
+                      ))} */}
                     </List>
                   </Collapse>
                 </List>

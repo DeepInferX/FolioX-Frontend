@@ -5,30 +5,31 @@ const MESSAGE_CLEAR = "MESSAGE_CLEAR";
 
 //action creater
 
-const message = {
-  success: (message) => {
-    return {
-      type: MESSAGE_SUCCESS,
-      payload: message,
-    };
-  },
+const messageSuccess = (message) => {
+  return {
+    type: MESSAGE_SUCCESS,
+    payload: message,
+  };
+};
 
-  error: (message) => {
-    return {
-      type: MESSAGE_ERROR,
-      payload: message,
-    };
-  },
-  clear: () => {
-    return {};
-  },
+const messageError = (message) => {
+  return {
+    type: MESSAGE_ERROR,
+    payload: message,
+  };
+};
+
+const messageClear = () => {
+  return {
+    type: MESSAGE_CLEAR,
+  };
 };
 
 //reducer
 
 const initialMessageState = {
-  success: "",
-  error: "",
+  success: null,
+  error: null,
 };
 
 const messageReducer = (state = initialMessageState, action) => {
@@ -43,13 +44,13 @@ const messageReducer = (state = initialMessageState, action) => {
         error: action.payload,
       };
     case MESSAGE_CLEAR:
-      return {};
+      return initialMessageState;
 
     default:
       return state;
   }
 };
 
-export { success, error, clear };
+export { messageSuccess, messageError, messageClear };
 
 export default messageReducer;

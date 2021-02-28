@@ -1,12 +1,11 @@
 import { Grid } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "components/Navbar/Navbar";
 import fx from "assets/logo/fx.png";
 import Typography from "components/CustomTypography/Typography";
 import useStyles from "assets/style/pages/AdminRegister/AdminRegister";
 import CustomInput from "components/CustomInput/CustomInput";
 import CustomButton from "components/CustomButton/CustomButton";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 const circle = <span>&#9675;&nbsp;</span>;
@@ -22,12 +21,6 @@ export default function Landing(props) {
   const [collegeLinkedin, setCollegeLinkedin] = useState("");
   const [collegeAddress, setCollegeAddress] = useState("");
 
-  //State for showing storing error message
-  const [error, setError] = useState({ message: "" });
-
-  useEffect(() => {
-    error.message !== "" && errorNotification();
-  }, [error.message]);
   /**
    * Function for handling change in input field
    * @param event
@@ -88,11 +81,11 @@ export default function Landing(props) {
     setCollegeAddress((collegeAddress) => collegeAddress.trim());
 
     //Error notification when password and confirm password didn't match
-    if (password !== confirmPassword) {
-      setError({ message: "Password didn't match" });
+    // if (password !== confirmPassword) {
+    //   setError({ message: "Password didn't match" });
 
-      return;
-    }
+    //   return;
+    // }
 
     const formData = new FormData();
     formData.append("name", name);
@@ -110,7 +103,7 @@ export default function Landing(props) {
         //if success = 0 something wrong
         if (success === 0) {
           setTimeout(() => {
-            setError({ message });
+            // setError({ message });
           }, 100);
         }
 
@@ -124,29 +117,8 @@ export default function Landing(props) {
 
   const classes = useStyles();
 
-  //Toast Notification for showing error to users
-  const errorNotification = () =>
-    toast.error(error.message, {
-      position: "bottom-center",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-
   return (
     <form onSubmit={submitHandler} className={classes.root}>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-      />
       <Grid
         container
         direction="column"
