@@ -1,5 +1,6 @@
 import axios from "axios";
 import message from "store/message";
+
 //constant
 const COLLEGE_LIST_REQUEST = "COLLEGE_LIST_REQUEST";
 const COLLEGE_LIST_SUCCESS = "COLLEGE_LIST_SUCCESS";

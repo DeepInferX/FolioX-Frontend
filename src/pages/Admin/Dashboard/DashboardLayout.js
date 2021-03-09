@@ -2,9 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { Outlet } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import NavBar from "./NavBar";
-import TopBar from "./TopBar";
-import axios from "axios";
-
+import TopBar from "components/TopBar/TopBar";
+import { useDispatch, useSelector } from "react-redux";
+import { loadGroups } from "store/user/index";
+import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -34,31 +35,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DashboardLayout = (props) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-  // const { groups, setGroups } = useContext(adminContext);
+  const admin_id = useSelector((store) => store.auth.user.access_key.admin_id);
+  const isLoading = useSelector((store) => store.user.isLoading);
+
+  //Load Groups
+  useEffect(() => {
+    dispatch(loadGroups(admin_id));
+  }, []);
   console.log(props);
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       "http://foliox.deepinferx.in/web/api/admin/students/groups/get?admin=15"
-  //     )
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       const { success } = res.data;
-  //       if (success === 0) {
-  //         setGroups(res.data.groups);
-  //         console.log(res.data.groups);
-  //       }
-  //     });
-  // }, []);
 
   return (
     <div className={classes.root}>
+      <LoadingSpinner open={isLoading} />
       <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <NavBar
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
+        
       />
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>

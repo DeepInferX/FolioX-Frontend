@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as message from "store/message";
+
 //constant
 const LOGIN_REQUEST = "LOGIN_REQUEST";
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -30,7 +31,7 @@ const login = (user) => {
   return async (dispatch) => {
     dispatch(loginRequest());
     try {
-      const { data } = await axios.post(
+      const { data } = await  axios.post(
         "http://foliox.deepinferx.in/web/api/admin/login",
         user
       );

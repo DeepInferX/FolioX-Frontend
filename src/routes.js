@@ -4,8 +4,9 @@ import AdminLogin from "pages/Admin/AdminLogin/AdminLogin";
 import AdminRegister from "pages/Admin/AdminRegister/AdminRegister";
 import AdminOption from "pages/Admin/AdminOption/AdminOption";
 import AdminRegistrationOverlay from "pages/Admin/AdminRegister/RegistrationOverlay";
-import Dashboard from "pages/Admin/Dashboard/DashboardLayout";
+import DashboardLayout from "pages/Admin/Dashboard/DashboardLayout";
 import DashboardHome from "pages/Admin/Dashboard/view/Home";
+import Group from "pages/Admin/Dashboard/view/Group";
 
 const routes = [
   {
@@ -28,8 +29,13 @@ const routes = [
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
-        children: [{ path: "/", element: <DashboardHome /> }],
+        element: <DashboardLayout />,
+        children: [
+          { path: "home", element: <DashboardHome /> },
+          { path: "group/:id", element: <Group /> },
+          { path: "account", element: <h1>Account</h1> },
+          { path: "settings", element: <h1>Settings</h1> },
+        ],
       },
     ],
   },

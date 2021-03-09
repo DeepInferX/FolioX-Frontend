@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { Link as RouterLink, Navigate, useLocation } from "react-router-dom";
-// import { adminContext } from "pages/Admin/AdminContext";
 import PropTypes from "prop-types";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import {
   Avatar,
   Box,
@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
   Collapse,
+  ListItemIcon,
 } from "@material-ui/core";
 import {
   AlertCircle as AlertCircleIcon,
@@ -28,26 +29,27 @@ import {
 } from "react-feather";
 import NavItem from "./NavItem";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { useSelector } from "react-redux";
 
 const items = [
   {
-    href: "/admin/dashboard",
+    href: "../home",
     icon: BarChartIcon,
     title: "Dashboard",
   },
   {
-    href: "/admin/student-group",
+    href: "../student-group",
     icon: UsersIcon,
     title: "Student Groups",
   },
 
   {
-    href: "/app/account",
+    href: "../account",
     icon: UserIcon,
     title: "Account",
   },
   {
-    href: "/app/settings",
+    href: "../settings",
     icon: SettingsIcon,
     title: "Settings",
   },
@@ -58,7 +60,7 @@ const useStyles = makeStyles(() => ({
     width: 256,
   },
   desktopDrawer: {
-    width: 256,
+    width: 300,
     top: 64,
     height: "calc(100% - 64px)",
   },
@@ -77,7 +79,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     setOpen(!open);
   };
 
-  // const { groups } = useContext(adminContext);
+  const groups = useSelector((store) => store.user.groups);
+  const adminName = useSelector((store) => store.auth.user.user.name);
+  const adminEmail = useSelector((store) => store.auth.user.user.email);
+  const planExpireDate = useSelector(
+    (store) => store.auth.user.user.plan_expire_date
+  );
   const classes = useStyles();
   const location = useLocation();
 
@@ -104,13 +111,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           to="/app/account"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
-          {/* {user.name} */}
+          {adminName}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {/* {user.email} */}
+          {adminEmail}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {/* Plan Expires On - <b>{user.plan_expire_date} </b> */}
+          Plan Expires On - <b>{planExpireDate} </b>
         </Typography>
       </Box>
       <Divider />
@@ -125,18 +132,27 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                   className={classes.root}
                 >
                   <ListItem button onClick={handleClick}>
+                    <ListItemIcon>
+                      <PeopleAltIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Student Groups" />
                     {open ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
+                  <Collapse
+                    style={{ paddingLeft: 30 }}
+                    in={open}
+                    timeout="auto"
+                    unmountOnExit
+                  >
                     <List component="div" disablePadding>
-                      {/* {groups.map((group) => (
-                        <NavItem href={group.id}>
-                          <ListItem button className={classes.nested}>
-                            <ListItemText primary={group.group_name} />
-                          </ListItem>
-                        </NavItem>
-                      ))} */}
+                      <NavItem
+                        href={"add"}
+                        title={<span>&#xFF0B; &nbsp; New</span>}
+                      />
+                      {groups &&
+                        groups.map((group) => (
+                          <NavItem href={group.id} title={group.name} />
+                        ))}
                     </List>
                   </Collapse>
                 </List>

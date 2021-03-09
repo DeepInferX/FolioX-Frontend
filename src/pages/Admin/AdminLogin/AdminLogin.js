@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { trackPromise } from "react-promise-tracker";
 
 //@material-ui core components
 import { Grid, makeStyles } from "@material-ui/core";
@@ -38,7 +39,9 @@ export default function AdminLogin(props) {
   const dispatch = useDispatch();
 
   const collegeList = useSelector((store) => store.college.list);
-  const isLoading = useSelector((store) => store.college.isLoading);
+  const isLoading = useSelector(
+    (store) => store.college.isLoading || store.auth.isLoading
+  );
 
   const [loginCredentials, setLoginCredentials] = useState({
     email: undefined,
@@ -63,14 +66,15 @@ export default function AdminLogin(props) {
     formData.append("college_id", loginCredentials.college_id);
     formData.append("email", loginCredentials.email);
     formData.append("password", loginCredentials.password);
-    dispatch(auth.login(formData));
+
+    trackPromise(dispatch(auth.login(formData)));
   };
 
   const user = useSelector((store) => store.auth.user?.auth_token);
   const navigate = useNavigate();
 
   if (user) {
-    navigate("../dashboard");
+    navigate("../dashboard/home");
   }
   return (
     <>
