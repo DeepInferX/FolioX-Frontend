@@ -1,22 +1,69 @@
-import { Button } from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import React from "react";
-import useStyle from "assets/style/components/CustomButton/CustomeButton";
 import classNames from "classnames";
 import { NavLink } from "react-router-dom";
 // import Navbar from "components/Navbar/Navbar";
+
+const useStyle = makeStyles((theme) => ({
+  root: {
+    minHeight: "auto",
+    minWidth: "auto",
+    borderRadius: "6px",
+    padding: "5px 25px",
+    margin: "15px 25px 15px 0px",
+    textTransform: "none",
+    // fontFamily: "Quicksand, sans-serif !important",
+  },
+  navLink: {
+    textDecoration: "none",
+  },
+  backgroundBrownLight: {
+    backgroundColor: "red",
+  },
+  backgroundBrownDark: {
+    backgroundColor: "orange",
+  },
+  backgroundBlueLight: {
+    backgroundColor: "rgba(57, 74, 171, 0.8)",
+  },
+
+  yellow: {
+    backgroundColor: "#FFDF9B",
+  },
+  white: {
+    backgroundColor: theme.palette.common.white,
+  },
+  brown: {
+    backgroundColor: "#DB9696",
+  },
+
+  borderGray: {
+    border: "2px solid #f4f4f4",
+  },
+}));
+
+const useColor = makeStyles((theme) => ({
+  white: {
+    color: theme.palette.common.white,
+  },
+}));
+
 export default function CustomButton({
   text,
   logo,
   to,
   background,
   border,
+  color,
   ...rest
 }) {
   const classes = useStyle();
+  const colors = useColor();
   const buttonClasses = classNames({
     [classes[border]]: border,
     [classes[background]]: true,
     [classes.root]: true,
+    [colors[color]]: color,
   });
   if (to) {
     return (

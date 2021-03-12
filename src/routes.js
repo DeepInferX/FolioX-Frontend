@@ -32,7 +32,7 @@ const routes = [
         element: <DashboardLayout />,
         children: [
           { path: "home", element: <DashboardHome /> },
-          { path: "group/:id", element: <Group /> },
+          { path: "group/id=:id", element: <Group /> },
           { path: "account", element: <h1>Account</h1> },
           { path: "settings", element: <h1>Settings</h1> },
         ],

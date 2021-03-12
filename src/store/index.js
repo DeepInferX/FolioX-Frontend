@@ -6,15 +6,17 @@ import storage from "redux-persist/lib/storage";
 
 //Reducer
 import messageReducer from "store/message";
-import userReducer from "store/user";
+import groupReducer from "store/group";
 import authReducer from "store/auth";
 import collegeReducer from "store/college";
+import isLoadingReducer from "store/isLoading";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  user: userReducer,
+  group: groupReducer,
   message: messageReducer,
   college: collegeReducer,
+  loading: isLoadingReducer,
 });
 
 //Persist config

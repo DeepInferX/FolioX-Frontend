@@ -19,7 +19,7 @@ import image from "assets/img/admin-login-image.svg";
 
 //action creater
 import * as auth from "store/auth";
-import { collgeList } from "store/college";
+import { loadCollegeList } from "store/college";
 
 const circle = <span>&#9675;&nbsp;</span>;
 
@@ -56,7 +56,7 @@ export default function AdminLogin(props) {
 
   //Dispatch action  to fetch list of registered colleges
   useEffect(() => {
-    dispatch(collgeList.fetch());
+    dispatch(loadCollegeList());
   }, []);
 
   //Form submit handler
@@ -78,7 +78,7 @@ export default function AdminLogin(props) {
   }
   return (
     <>
-      <LoadingSpinner open={isLoading} />
+      {/* <LoadingSpinner open={isLoading} /> */}
       <form onSubmit={submitHandler}>
         <Grid className={classes.root} container direction="column">
           <Grid item style={{ height: "100px" }}>

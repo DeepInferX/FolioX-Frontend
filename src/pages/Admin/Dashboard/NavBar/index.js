@@ -55,7 +55,7 @@ const items = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
     width: 256,
   },
@@ -69,6 +69,20 @@ const useStyles = makeStyles(() => ({
     width: 64,
     height: 64,
   },
+  studentGroup: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  title: {
+    marginRight: "auto",
+    fontSize: "0.87rem",
+  },
+  icon: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
@@ -79,7 +93,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     setOpen(!open);
   };
 
-  const groups = useSelector((store) => store.user.groups);
+  const groups = useSelector((store) => store.group.groups);
   const adminName = useSelector((store) => store.auth.user.user.name);
   const adminEmail = useSelector((store) => store.auth.user.user.email);
   const planExpireDate = useSelector(
@@ -123,19 +137,27 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       <Divider />
       <Box p={2}>
         <List>
-          {items.map((item) => {
+          {items.map((item, idx) => {
             if (item.title === "Student Groups") {
               return (
                 <List
+                  key={"Student Groups"}
                   component="nav"
                   aria-labelledby="nested-list-subheader"
                   className={classes.root}
                 >
-                  <ListItem button onClick={handleClick}>
-                    <ListItemIcon>
-                      <PeopleAltIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Student Groups" />
+                  <ListItem
+                    button
+                    onClick={handleClick}
+                    className={classes.studentGroup}
+                  >
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <PeopleAltIcon size={10} className={classes.icon} />
+                      <span primary="Student Groups" className={classes.title}>
+                        Student Group
+                      </span>
+                    </div>
+
                     {open ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse
@@ -150,8 +172,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
                         title={<span>&#xFF0B; &nbsp; New</span>}
                       />
                       {groups &&
-                        groups.map((group) => (
-                          <NavItem href={group.id} title={group.name} />
+                        groups.map((group, idx) => (
+                          <NavItem
+                            key={idx}
+                            href={`id=${group.id}`}
+                            title={group.group_name}
+                          />
                         ))}
                     </List>
                   </Collapse>
@@ -161,7 +187,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               return (
                 <NavItem
                   href={item.href}
-                  key={item.title}
+                  key={idx}
                   title={item.title}
                   icon={item.icon}
                 />

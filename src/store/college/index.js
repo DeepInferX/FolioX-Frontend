@@ -8,41 +8,39 @@ const COLLEGE_LIST_FAILED = "COLLGE_LIST_FAILED";
 
 //action creater
 
-const collgeList = {
-  request: () => {
-    return {
-      type: COLLEGE_LIST_REQUEST,
-    };
-  },
+const collegeListRequested = () => {
+  return {
+    type: COLLEGE_LIST_REQUEST,
+    isLoading: true,
+  };
+};
 
-  succes: (colleges) => {
-    return {
-      type: COLLEGE_LIST_SUCCESS,
-      payload: colleges,
-    };
-  },
+const collegeListSuccess = (colleges) => {
+  return {
+    type: COLLEGE_LIST_SUCCESS,
+    payload: colleges,
+    isLoading: false,
+  };
+};
 
-  failed: () => {
-    return {
-      type: COLLEGE_LIST_FAILED,
-    };
-  },
+const collegeListFailed = () => {
+  return {
+    type: COLLEGE_LIST_FAILED,
+    isLoading: false,
+  };
+};
+const loadCollegeList = () => {
+  return async (dispatch) => {
+    dispatch(collegeListRequested());
 
-  fetch: () => {
-    return async (dispatch) => {
-      dispatch(collgeList.request());
-      try {
-        const { data } = await axios.get(
-          "http://foliox.deepinferx.in/web/api/gen/colleges"
-        );
-        console.log(data);
-        dispatch(collgeList.succes(data.colleges));
-      } catch (error) {
-        dispatch(message.error(error.message));
-        dispatch(collgeList.failed());
-      }
-    };
-  },
+    try {
+      const { data } = await axios.get("/gen/colleges");
+      dispatch(collegeListSuccess(data.colleges));
+    } catch (error) {
+      dispatch(message.error(error.message));
+      dispatch(collegeListFailed());
+    }
+  };
 };
 
 //reducer
@@ -79,4 +77,4 @@ const collegeReducer = (state = initialCollegeState, action) => {
 };
 
 export default collegeReducer;
-export { collgeList };
+export { loadCollegeList };

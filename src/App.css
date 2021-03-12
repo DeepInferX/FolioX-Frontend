@@ -8,7 +8,9 @@ body {
   margin: 0px;
   box-sizing: border-box;
 }
-
+/* * ::-webkit-scrollbar {
+  display: none;
+} */
 /* 
 
 xs - 0px
