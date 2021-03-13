@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { trackPromise } from "react-promise-tracker";
 
 //@material-ui core components
 import { Grid, makeStyles } from "@material-ui/core";
@@ -12,13 +11,12 @@ import CustomInput from "components/CustomInput/CustomInput";
 import CustomButton from "components/CustomButton/CustomButton";
 import Navbar from "components/Navbar/Navbar";
 import Select from "components/Select/Select";
-import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 
 import fx from "assets/logo/fx.png";
 import image from "assets/img/admin-login-image.svg";
 
 //action creater
-import * as auth from "store/auth";
+import { login } from "store/auth";
 import { loadCollegeList } from "store/college";
 
 const circle = <span>&#9675;&nbsp;</span>;
@@ -39,9 +37,6 @@ export default function AdminLogin(props) {
   const dispatch = useDispatch();
 
   const collegeList = useSelector((store) => store.college.list);
-  const isLoading = useSelector(
-    (store) => store.college.isLoading || store.auth.isLoading
-  );
 
   const [loginCredentials, setLoginCredentials] = useState({
     email: undefined,
@@ -67,18 +62,18 @@ export default function AdminLogin(props) {
     formData.append("email", loginCredentials.email);
     formData.append("password", loginCredentials.password);
 
-    trackPromise(dispatch(auth.login(formData)));
+    dispatch(login(formData));
   };
 
   const user = useSelector((store) => store.auth.user?.auth_token);
-  const navigate = useNavigate();
 
+  //If login successfull
+  const navigate = useNavigate();
   if (user) {
     navigate("../dashboard/home");
   }
   return (
     <>
-      {/* <LoadingSpinner open={isLoading} /> */}
       <form onSubmit={submitHandler}>
         <Grid className={classes.root} container direction="column">
           <Grid item style={{ height: "100px" }}>

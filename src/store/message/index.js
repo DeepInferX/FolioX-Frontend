@@ -4,7 +4,6 @@ const MESSAGE_ERROR = "MESSAGE_ERROR";
 const MESSAGE_CLEAR = "MESSAGE_CLEAR";
 
 //action creater
-
 const messageSuccess = (message) => {
   return {
     type: MESSAGE_SUCCESS,
@@ -26,7 +25,6 @@ const messageClear = () => {
 };
 
 //reducer
-
 const initialMessageState = {
   success: null,
   error: null,

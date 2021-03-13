@@ -11,12 +11,14 @@ const LOGIN_FAILED = "LOGIN_FAILED";
 const loginRequest = () => {
   return {
     type: LOGIN_REQUEST,
+    isLoading: true,
   };
 };
 
 const loginFailed = () => {
   return {
     type: LOGIN_FAILED,
+    isLoading: false,
   };
 };
 
@@ -24,6 +26,7 @@ const loginSuccess = (user) => {
   return {
     type: LOGIN_SUCCESS,
     payload: user,
+    isLoading: false,
   };
 };
 
@@ -31,7 +34,7 @@ const login = (user) => {
   return async (dispatch) => {
     dispatch(loginRequest());
     try {
-      const { data } = await  axios.post(
+      const { data } = await axios.post(
         "http://foliox.deepinferx.in/web/api/admin/login",
         user
       );
@@ -61,7 +64,6 @@ const logout = () => {};
 //Reducer
 
 const initialAuthState = {
-  isLoading: false,
   user: {},
 };
 
@@ -70,20 +72,17 @@ const authReducer = (state = initialAuthState, action) => {
     case LOGIN_REQUEST:
       return {
         ...state,
-        isLoading: true,
       };
 
     case LOGIN_SUCCESS:
       return {
         ...state,
-        isLoading: false,
         user: action.payload,
       };
 
     case LOGIN_FAILED:
       return {
         ...state,
-        isLoading: false,
       };
 
     default:

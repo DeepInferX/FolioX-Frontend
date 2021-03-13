@@ -1,5 +1,5 @@
 import axios from "axios";
-import message from "store/message";
+import { messageClear, messageError, messageSuccess } from "store/message";
 
 //constant
 const COLLEGE_LIST_REQUEST = "COLLEGE_LIST_REQUEST";
@@ -29,15 +29,19 @@ const collegeListFailed = () => {
     isLoading: false,
   };
 };
+
 const loadCollegeList = () => {
   return async (dispatch) => {
     dispatch(collegeListRequested());
 
     try {
       const { data } = await axios.get("/gen/colleges");
+      if (data.success === 0) {
+        throw { message: "Something went wrong." };
+      }
       dispatch(collegeListSuccess(data.colleges));
     } catch (error) {
-      dispatch(message.error(error.message));
+      dispatch(messageError(error.message));
       dispatch(collegeListFailed());
     }
   };
@@ -46,7 +50,6 @@ const loadCollegeList = () => {
 //reducer
 
 const initialCollegeState = {
-  isLoading: false,
   list: [],
 };
 
@@ -55,20 +58,17 @@ const collegeReducer = (state = initialCollegeState, action) => {
     case COLLEGE_LIST_REQUEST:
       return {
         ...state,
-        isLoading: true,
       };
 
     case COLLEGE_LIST_SUCCESS:
       return {
         ...state,
-        isLoading: false,
         list: action.payload,
       };
 
     case COLLEGE_LIST_FAILED:
       return {
         ...state,
-        isLoading: false,
       };
 
     default:

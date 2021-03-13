@@ -12,22 +12,24 @@ const GROUP_DELETE_FAILED = "GROUP_DELETE_FAILED";
 
 //action creater
 
+const loadGroupsRequest = () => {
+  return {
+    type: GROUP_LOAD_REQUEST,
+    isLoading: true,
+  };
+};
 const loadGroupsSuccess = (groups) => {
   return {
     type: GROUP_LOAD_SUCCESS,
     payload: groups,
-  };
-};
-
-const loadGroupsRequest = () => {
-  return {
-    type: GROUP_LOAD_REQUEST,
+    isLoading: false,
   };
 };
 
 const loadGroupsFailed = () => {
   return {
     type: GROUP_LOAD_FAILED,
+    isLoading: false,
   };
 };
 
@@ -42,7 +44,6 @@ const loadGroups = (id) => {
         data: { groups },
       } = res;
       dispatch(loadGroupsSuccess(groups));
-      console.log(groups);
     } catch (error) {
       dispatch(loadGroupsFailed());
       dispatch(messageError(error.message));
@@ -50,9 +51,24 @@ const loadGroups = (id) => {
   };
 };
 
+const deleteGroupRequest = () => ({
+  type: GROUP_DELETE_REQUEST,
+  isLoading: true,
+});
+
+const deleteGroupSuccess = () => ({
+  type: GROUP_DELETE_SUCCESS,
+  isLoading: true,
+});
+
+const deleteGroupFailed = () => ({
+  type: GROUP_LOAD_FAILED,
+  isLoading: true,
+});
+
 const deleteGroup = (group_id, admin_id) => {
   return async (dispatch) => {
-    dispatch({ type: GROUP_DELETE_REQUEST });
+    dispatch(deleteGroupRequest());
 
     try {
       const res = await axios({
@@ -64,14 +80,13 @@ const deleteGroup = (group_id, admin_id) => {
         },
       });
       console.log(res);
-      const { success } = res.data;
-      if (success === 0) {
+      if (res.data.success === 0) {
         throw res.data;
       }
-      dispatch({ type: GROUP_DELETE_SUCCESS });
+      dispatch(deleteGroupSuccess());
       dispatch(messageSuccess(res.data.message));
     } catch (error) {
-      dispatch({ type: GROUP_DELETE_FAILED });
+      dispatch(deleteGroupFailed());
       dispatch(messageError(error.message));
     }
   };
@@ -84,39 +99,33 @@ const groupReducer = (state = {}, action) => {
     case GROUP_LOAD_REQUEST:
       return {
         ...state,
-        isLoading: true,
       };
 
     case GROUP_LOAD_SUCCESS:
       return {
         ...state,
-        isLoading: false,
         groups: action.payload,
       };
 
     case GROUP_LOAD_FAILED:
       return {
         ...state,
-        isLoading: false,
       };
 
     //delete group by group id
     case GROUP_DELETE_REQUEST:
       return {
         ...state,
-        isLoading: true,
       };
 
     case GROUP_DELETE_SUCCESS:
       return {
         ...state,
-        isLoading: false,
       };
 
     case GROUP_DELETE_FAILED:
       return {
         ...state,
-        isLoading: false,
       };
 
     default:
