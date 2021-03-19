@@ -52,7 +52,7 @@ const DashboardLayout = (props) => {
   useEffect(() => {
     //For now static admin id
     //Later on change to dynamic id
-    dispatch(loadGroups(1));
+    dispatch(loadGroups(admin_id));
   }, []);
 
   return (

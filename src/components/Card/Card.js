@@ -4,9 +4,34 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { NavLink } from "react-router-dom";
-import useStyles from "assets/style/components/Card/Card";
-import { Box } from "@material-ui/core";
+import { Box, makeStyles } from "@material-ui/core";
 import classNames from "classnames";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    textDecoration: "none",
+    width: "240px",
+    maxHeight: "240px",
+    borderRadius: "25px",
+    color: "#000",
+    fontWeight: "300",
+  },
+  text: {
+    fontFamily: "Quicksand, sans-serif !important",
+  },
+  box: {
+    margin: "10px 35px",
+  },
+  imgContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  img: {
+    height: "150px",
+  },
+}));
+
 export default function ImgMediaCard({ text, to, Img, ...rest }) {
   const classes = useStyles();
 

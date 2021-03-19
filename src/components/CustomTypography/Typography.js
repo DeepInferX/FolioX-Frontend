@@ -1,7 +1,16 @@
-import { Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import useStyles from "assets/style/components/CustomTypography/CustomTypography";
 import classNames from "classnames";
+
+const useStyles = makeStyles(() => ({
+  root: {
+    fontFamily: "Quicksand, sans-serif !important",
+  },
+  800: {
+    fontWeight: "800",
+  },
+}));
+
 export default function CustomTypography({ fontWeight, children, ...rest }) {
   const classes = useStyles();
   const typographyClasses = classNames({
