@@ -110,16 +110,15 @@ const deleteStudent = (student, admin_id) => {
       isLoading: true,
     });
     try {
-      const { id } = student;
-      const res = await axios.post("/admin/students/delete", {
-        admin_id,
-        student_id: id,
-      });
+      const fd = new FormData();
+      fd.append('admin_id', admin_id)
+      fd.append('student_id', student.id);
+      const res = await axios.post("/admin/students/delete", fd);
 
       if (res.data.success === 0) {
         throw { message: res.data.message };
       }
-      dispatch({ type: DELETE_STUDENT_SUCCESS, isLoading: false });
+      dispatch({ type: DELETE_STUDENT_SUCCESS,payload: student, isLoading: false });
       dispatch(notificationSuccess(res.data.message));
     } catch (error) {
       dispatch({
@@ -170,32 +169,41 @@ const groupReducer = (state = {}, action) => {
       return {
         ...state,
         groups: action.payload,
-      };
-    case GROUP_DELETE_SUCCESS:
-      return {
-        ...state,
-      };
+      }
 
-    case GROUP_DELETE_FAILED:
-      return {
-        ...state,
-      };
-
-    case UPDATE_STUDENT_SUCCESS: 
-      const updatedStudent = action.payload
-      const group_id = updatedStudent.group_id
-      const student_id = updatedStudent.id
-      const studentGroup = state.groups.filter(group=>group.id === group_id)[0]
-      const remainingGroup = state.groups.filter(group => group.id !== group_id);
-      return {
+    case DELETE_STUDENT_SUCCESS: 
+      {
+        const deletedStudent = action.payload
+        const group_id = deletedStudent.group_id
+        const student_id = deletedStudent.id
+        const studentGroup = state.groups.filter(group=>group.id === group_id)[0]  
+        const remainingGroup = state.groups.filter(group => group.id !== group_id)
+        return {
           ...state,
-          groups: [...remainingGroup,{
+          groups: [...remainingGroup, {
             ...studentGroup,
-            students: [...studentGroup.students.filter(student => student.id !== student_id), {...updatedStudent}]
+            students: [...studentGroup.students.filter(student => student.id !== student_id)]
           }]
+        };
+      }
+      
 
-        }
-
+    case UPDATE_STUDENT_SUCCESS:
+      {
+        const updatedStudent = action.payload
+        const group_id = updatedStudent.group_id
+        const student_id = updatedStudent.id
+        const studentGroup = state.groups.filter(group=>group.id === group_id)[0]
+        const remainingGroup = state.groups.filter(group => group.id !== group_id)
+        return {
+            ...state,
+            groups: [...remainingGroup,{
+              ...studentGroup,
+              students: [...studentGroup.students.filter(student => student.id !== student_id), {...updatedStudent}]
+            }]
+          }
+      } 
+      
     default:
       return state;
   }
