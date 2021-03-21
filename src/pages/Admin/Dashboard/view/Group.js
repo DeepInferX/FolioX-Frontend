@@ -19,6 +19,7 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { deleteGroup, deleteStudent, updateStudent } from "store/group/index";
+import {sendMessageToStudent, sendMessageToGroup} from 'store/message'
 import Modal from "components/Modal";
 import Input from "components/CustomInput/CustomInput";
 
@@ -60,23 +61,56 @@ const useStyles = makeStyles({
   },
 });
 
-const GroupHeader = () => {
-  const { id } = useParams();
-  const admin_id = useSelector((store) => store.auth.user.access_key.admin_id);
-  const dispatch = useDispatch();
-  const groupCreatedAt = useSelector((store) => store.group.groups).filter(
-    (group) => group.id === id
-  )[0].time;
+const useMessageStyles = makeStyles((theme) => ({
+  root: {
+    // width: 350,
+    width:'100%',
+    padding: 15,
+    paddingTop: 30,
+    paddingBottom: 40,
+    backgroundColor: "e5e5e5",
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[20],
+    backgroundColor: '#e6e8e6'
+  },
+  receiver: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    display: "flex",
+    alignItems: "center",
+    marginBottom: 15,
+    backgroundColor: '#fff',
+    "& h3": {
+      color: "#a1a1a1",
+    },
+    "& p": {
+      color: "#ECB365",
+      fontWeight: "bold",
+      paddingLeft: 30,
+    },
+  },
+  message: {
+    boxShadow: `${theme.shadows[20]}`,
+    border: "none",
+    outline: "none",
+    padding: 10,
+  }
+}));
+
+
+const GroupHeader = ({groupCreatedAt, sendMessageToGroup, deleteGroup}) => {
   return (
     <Grid container justify="space-between" alignItems="center">
       <Typography>Group Details</Typography>
       <Grid xs item container alignItems="center" justify="flex-end">
         <ChatBubbleOutlineIcon
+        onClick={sendMessageToGroup}
           style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
         />
         <AddIcon style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }} />
         <DeleteOutlineIcon
-          onClick={() => dispatch(deleteGroup(id, "1"))}
+          // onClick={() => dispatch(deleteGroup(id, admin_id))}
+          onClick={deleteGroup()}
           style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
         />
         <Typography variant="caption">Created On: {groupCreatedAt}</Typography>
@@ -85,15 +119,14 @@ const GroupHeader = () => {
   );
 };
 
-const OtherGroups = () => {
-  const { id } = useParams();
-  const studentGroups = useSelector((store) => store.group.groups);
+const OtherGroups = ({grop_id, groups}) => {
+  
   const classes = useStyles();
   return (
     <Grid className={classes.group}>
       <Typography>Your other groups</Typography>
-      {studentGroups.map((group) => {
-        if (group.id === id) return;
+      {groups.map((group) => {
+        if (group.id === grop_id) return;
         return (
           <Button
             key={group.id}
@@ -108,14 +141,9 @@ const OtherGroups = () => {
   );
 };
 
-const StudentTable = ({ openDeleteModal, openUpdateModal }) => {
+const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, students, group_name }) => {
   const classes = useStyles();
-  const { id } = useParams();
-
-  const { students, group_name } = useSelector(
-    (store) => store.group.groups
-  ).filter((group) => group.id === id)[0];
-
+  students.sort((a, b)=> a.name.lenght > b.name.length)
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
       <Table className={classes.table} aria-label="customized table">
@@ -148,7 +176,7 @@ const StudentTable = ({ openDeleteModal, openUpdateModal }) => {
               >
                 Delete
               </StyledTableCell>
-              <StyledTableCell align="right">Message</StyledTableCell>
+              <StyledTableCell align="right" onClick={()=>openMessageModal(student)}>Message</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
@@ -234,77 +262,73 @@ const UpdateStudentModal = (props) => {
   );
 };
 
-const useMessageStyles = makeStyles((theme) => ({
-  root: {
-    width: 350,
-    padding: 15,
-    backgroundColor: "e5e5e5",
-  },
-  receiver: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    boxShadow: theme.shadows[20],
-    display: "flex",
-    alignItems: "center",
-    marginBottom: 15,
-    "& h3": {
-      color: "#a1a1a1",
-    },
-    "& p": {
-      color: "#ECB365",
-      fontWeight: "bold",
-      paddingLeft: 30,
-    },
-  },
-  message: {
-    boxShadow: `${theme.shadows[20]}`,
-    border: "none",
-    outline: "none",
-  },
-  sendButton: {
-    border: "none",
-    width: "100%",
-    padding: "10px",
-    fontSize: "1em",
-    fontWeight: "600",
-    outline: "none",
-    marginTop: "15px",
-    backgroundImage: "linear-gradient(to right, #AD67D1, #4879D8, #79EECC)",
-  },
-}));
 
-const Message = ({ to }) => {
+const MessageModal = ({ to, open, student, handleClose }) => {
+  const dispatch = useDispatch()
   const classes = useMessageStyles();
+  const [message, setMessage] = useState("")
+  const admin_id = useSelector(store=>store.auth.user.access_key.admin_id)
+  const sendMessage = (e) => {
+    dispatch(sendMessageToStudent({message, admin_id, stduent_id: student.id}))
+    handleClose()
+  }
   return (
-    <div className={classes.root}>
-      <h3>Create Message</h3>
-      <div className={classes.receiver}>
-        <h3>To</h3>
-        <p>{to}</p>
-      </div>
-      <div>
-        <Input
-          className={classes.message}
-          multiline
-          background="brown"
-          rows="10"
-        />
-        <button className={classes.sendButton}>Send Message</button>
-      </div>
-    </div>
+    <Modal open={open} handleClose={handleClose} >
+      <Grid style={{minWidth:300}}>
+      <Typography variant="h6" align="center" gutterBottom>
+          Create Message
+        </Typography>
+        <div className={classes.receiver}>
+          <h3>To</h3>
+          <p>{student.name}</p>
+        </div>
+        <div>
+          <Input
+          label="Enter your message..."
+            className={classes.message}
+            multiline
+            background="brown"
+            rows="10"
+            value={message}
+            onChange={(e)=>setMessage(e.target.value)}
+          />
+          <Grid item container justify="center">
+          <Button
+            text="Send"
+            onClick={sendMessage}
+            background="yellow"
+          />
+          <Button
+            text="Cancel"
+            onClick={handleClose}
+            background="backgroundBlueLight"
+          />
+        </Grid>
+        </div>
+      </Grid>
+      
+    </Modal>
   );
 };
 
 export default function Group(props) {
   const dispatch = useDispatch();
+  const {id: group_id} = useParams();
+  const groupCreatedAt = useSelector((store) => store.group.groups).filter((group) => group.id === group_id)[0].time;
+  const  {students, group_name}  = useSelector((store) => store.group.groups.filter((group) => group.id === group_id)[0] );
+  students.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
+  const groups = useSelector((store) => store.group.groups);
+
   const admin_id = useSelector((store) => store.auth.user.access_key.admin_id);
   const [deleteModal, setDeleteModal] = useState(false);
   const [student, setStudent] = useState("");
   const [updateModal, setUpdateModal] = useState(false);
+  const [messageModal, setMessageModal] = useState(false)
 
   const handleClose = () => {
     setDeleteModal(false);
     setUpdateModal(false);
+    setMessageModal(false);
     setStudent("");
   };
   const openDeleteModal = (student) => {
@@ -320,20 +344,38 @@ export default function Group(props) {
     setStudent(student);
     setUpdateModal(true);
   };
+
   const updateStudentHandler = () => {
-    console.log("hi");
     dispatch(updateStudent(student, admin_id));
     handleClose();
   };
 
+  const openMessageModal = (student) => {
+    setStudent(student);
+    setMessageModal(true);
+  }
+
+  const sendMessageToGroup = () => {
+
+  }
+
+  const deleteGroup = () => {
+
+  }
+
+
   return (
     <Grid>
-      {/* <DeleteStudentModal
-        open={deleteModal}
-        handleClose={handleClose}
-        student={student}
-        deleteStudentHandler={deleteStudentHandler}
+      <GroupHeader group_id={group_id} groupCreatedAt={groupCreatedAt} sendMessageToGroup={sendMessageToGroup} deleteGroup={deleteGroup} />
+      <StudentTable
+        openDeleteModal={openDeleteModal}
+        openUpdateModal={openUpdateModal}
+        openMessageModal={openMessageModal}
+        students={students}
+        group_name={group_name}
       />
+      <OtherGroups grop_id={group_id} groups={groups} />
+
       <UpdateStudentModal
         open={updateModal}
         student={student}
@@ -341,13 +383,15 @@ export default function Group(props) {
         handleClose={handleClose}
         updateStudentHandler={updateStudentHandler}
       />
-      <GroupHeader />
-      <StudentTable
-        openDeleteModal={openDeleteModal}
-        openUpdateModal={openUpdateModal}
+      <DeleteStudentModal
+        open={deleteModal}
+        handleClose={handleClose}
+        student={student}
+        deleteStudentHandler={deleteStudentHandler}
       />
-      <OtherGroups /> */}
-      <Message to="Rishav God" />
+      
+      <MessageModal open={messageModal} student={student} handleClose={handleClose} to="Rishav God" />
+      
     </Grid>
   );
 }

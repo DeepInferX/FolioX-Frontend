@@ -1,7 +1,7 @@
 import "./App.css";
 import { useRoutes } from "react-router-dom";
 import routes from "routes";
-import ErrorNotification from "components/Notification/ErrorNotification";
+import Notification from "components/Notification/Notification";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
@@ -14,7 +14,7 @@ function App() {
     <div className="App">
       {routing}
       <LoadingSpinner open={isLoading} />
-      <ErrorNotification />
+      <Notification />
     </div>
   );
 }

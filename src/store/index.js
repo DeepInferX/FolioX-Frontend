@@ -5,7 +5,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 //Reducer
-import messageReducer from "store/message";
+import notificationReducer from "store/notification";
 import groupReducer from "store/group";
 import authReducer from "store/auth";
 import collegeReducer from "store/college";
@@ -14,7 +14,7 @@ import isLoadingReducer from "store/isLoading";
 const rootReducer = combineReducers({
   auth: authReducer,
   group: groupReducer,
-  message: messageReducer,
+  notification: notificationReducer,
   college: collegeReducer,
   loading: isLoadingReducer,
 });

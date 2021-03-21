@@ -1,54 +1,51 @@
-//constant
-const MESSAGE_SUCCESS = "MESSAGE_SUCCESS";
-const MESSAGE_ERROR = "MESSAGE_ERROR";
-const MESSAGE_CLEAR = "MESSAGE_CLEAR";
+import {notificationError, notificationSuccess} from 'store/notification';
+import axios from 'axios';
+
+//constants
+const SEND_MESSAGE_REQUEST = 'SEND_MESSAGE_REQUEST';
+const SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS';
+const SEND_MESSAGE_FAILED = 'SEND_MESSAGE_FAILED';
+
 
 //action creater
-const messageSuccess = (message) => {
-  return {
-    type: MESSAGE_SUCCESS,
-    payload: message,
-  };
-};
+const sendMessageToStudent = (data) => {
+    const  url = '/admin/students/message'
 
-const messageError = (message) => {
-  return {
-    type: MESSAGE_ERROR,
-    payload: message,
-  };
-};
+    return async (dispatch)=> {
+        dispatch({type: SEND_MESSAGE_REQUEST, isLoading: true });
+        try{
+            const res = await axios.post(url,  data)
+            if(res.data.success === 0){
+                throw res;
+            }
+            dispatch(notificationSuccess(res.message))
+            dispatch({type: SEND_MESSAGE_SUCCESS, isLoading: false})
+        }catch(error){
+            dispatch(notificationError(error.message))
+            dispatch({type: SEND_MESSAGE_FAILED, isLoading: false})
+        }
+    }
+}
 
-const messageClear = () => {
-  return {
-    type: MESSAGE_CLEAR,
-  };
-};
+const sendMessageToGroup = (data) => {
+    const url = '/admin/students/groups/message'
 
-//reducer
-const initialMessageState = {
-  success: null,
-  error: null,
-};
+    return async (dispatch) => {
+        dispatch({type: SEND_MESSAGE_REQUEST, isLoading: true})
+        try{
+            const res = await axios.post(url, data)
+            if(res.data.success === 0){
+                throw res;
+            }
+            dispatch(notificationSuccess(res.message))
+            dispatch({type: SEND_MESSAGE_SUCCESS, isLoading: false})
 
-const messageReducer = (state = initialMessageState, action) => {
-  switch (action.type) {
-    case MESSAGE_SUCCESS:
-      return {
-        success: action.payload,
-      };
+        } catch(error){
+            dispatch(notificationError(error.message))
+            dispatch({type: SEND_MESSAGE_FAILED, isLoading: false})
+        }
+        
+    }
+}
 
-    case MESSAGE_ERROR:
-      return {
-        error: action.payload,
-      };
-    case MESSAGE_CLEAR:
-      return initialMessageState;
-
-    default:
-      return state;
-  }
-};
-
-export { messageSuccess, messageError, messageClear };
-
-export default messageReducer;
+export {sendMessageToGroup, sendMessageToStudent};

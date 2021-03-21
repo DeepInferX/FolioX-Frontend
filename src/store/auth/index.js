@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as message from "store/message";
+import {notificationError, notificationSuccess} from "store/notification";
 
 //constant
 const LOGIN_REQUEST = "LOGIN_REQUEST";
@@ -52,7 +52,7 @@ const login = (user) => {
       }
     } catch (error) {
       dispatch(loginFailed());
-      dispatch(message.messageError(error.message));
+      dispatch(notificationError(error.message));
     }
   };
 };

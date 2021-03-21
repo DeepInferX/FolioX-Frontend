@@ -1,5 +1,5 @@
 import axios from "axios";
-import { messageClear, messageError, messageSuccess } from "store/message";
+import { notificationError,notificationSuccess } from "store/notification";
 
 //constant
 const GROUP_LOAD_REQUEST = "GROUP_REQUEST";
@@ -54,7 +54,7 @@ const loadGroups = (id) => {
       dispatch(loadGroupsSuccess(groups));
     } catch (error) {
       dispatch(loadGroupsFailed());
-      dispatch(messageError(error.message));
+      dispatch(notificationError(error.message));
     }
   };
 };
@@ -95,10 +95,10 @@ const deleteGroup = (group_id, admin_id) => {
         throw res.data;
       }
       dispatch(deleteGroupSuccess());
-      dispatch(messageSuccess(res.data.message));
+      dispatch(notificationSuccess(res.data.message));
     } catch (error) {
       dispatch(deleteGroupFailed());
-      dispatch(messageError(error.message));
+      dispatch(notificationError(error.message));
     }
   };
 };
@@ -120,13 +120,13 @@ const deleteStudent = (student, admin_id) => {
         throw { message: res.data.message };
       }
       dispatch({ type: DELETE_STUDENT_SUCCESS, isLoading: false });
-      dispatch(messageSuccess(res.data.message));
+      dispatch(notificationSuccess(res.data.message));
     } catch (error) {
       dispatch({
         type: DELETE_STUDENT_FAILED,
         isLoading: false,
       });
-      dispatch(messageError(error.message));
+      dispatch(notificationError(error.message));
     }
   };
 };
@@ -139,20 +139,25 @@ const updateStudent = (student, admin_id) => {
     });
 
     try {
-      const res = await axios.post("/admin/students/update", {
-        admin_id,
-        student_id: student.id,
-        name: student.name,
-        email: student.email,
-        mobile: student.mobile,
-        pass: student.password,
+      const fd = new FormData();
+      fd.append('admin_id', admin_id);
+      fd.append('student_id', student.id);
+      fd.append('name', student.name);
+      fd.append('email', student.email);
+      fd.append('mobile', student.mobile);
+      fd.append('pass', student.password);
+      
+      const res = await axios.post("/admin/students/update", fd, {
+        headers: {
+          'Content-type':'multipart/form-data'
+        }
       });
       if (res.data.success === 0) throw { message: res.data.message };
-      dispatch({ type: UPDATE_STUDENT_SUCCESS, isLoading: false });
-      dispatch(messageSuccess(res.data.message));
+      dispatch({ type: UPDATE_STUDENT_SUCCESS, payload: student, isLoading: false });
+      dispatch(notificationSuccess(res.data.message));
     } catch (error) {
       dispatch({ type: UPDATE_STUDENT_FAILED, isLoading: false });
-      dispatch(messageError(error.message));
+      dispatch(notificationError(error.message));
     }
   };
 };
@@ -161,22 +166,11 @@ const updateStudent = (student, admin_id) => {
 
 const groupReducer = (state = {}, action) => {
   switch (action.type) {
-    case GROUP_LOAD_REQUEST:
-      return {
-        ...state,
-      };
-
     case GROUP_LOAD_SUCCESS:
       return {
         ...state,
         groups: action.payload,
       };
-
-    case GROUP_LOAD_FAILED:
-      return {
-        ...state,
-      };
-
     case GROUP_DELETE_SUCCESS:
       return {
         ...state,
@@ -186,6 +180,21 @@ const groupReducer = (state = {}, action) => {
       return {
         ...state,
       };
+
+    case UPDATE_STUDENT_SUCCESS: 
+      const updatedStudent = action.payload
+      const group_id = updatedStudent.group_id
+      const student_id = updatedStudent.id
+      const studentGroup = state.groups.filter(group=>group.id === group_id)[0]
+      const remainingGroup = state.groups.filter(group => group.id !== group_id);
+      return {
+          ...state,
+          groups: [...remainingGroup,{
+            ...studentGroup,
+            students: [...studentGroup.students.filter(student => student.id !== student_id), {...updatedStudent}]
+          }]
+
+        }
 
     default:
       return state;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { messageClear, messageError, messageSuccess } from "store/message";
+import { notificationClear,notificationError,notificationSuccess } from "store/notification";
 
 //constant
 const COLLEGE_LIST_REQUEST = "COLLEGE_LIST_REQUEST";
@@ -41,7 +41,7 @@ const loadCollegeList = () => {
       }
       dispatch(collegeListSuccess(data.colleges));
     } catch (error) {
-      dispatch(messageError(error.message));
+      dispatch(notificationError(error.message));
       dispatch(collegeListFailed());
     }
   };
