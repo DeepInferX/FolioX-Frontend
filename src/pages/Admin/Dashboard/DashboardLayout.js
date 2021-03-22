@@ -57,7 +57,6 @@ const DashboardLayout = (props) => {
 
   return (
     <div className={classes.root}>
-      <LoadingSpinner open={isLoading} />
       <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <NavBar
         onMobileClose={() => setMobileNavOpen(false)}

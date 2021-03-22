@@ -33,14 +33,19 @@ const sendMessageToGroup = (data) => {
     return async (dispatch) => {
         dispatch({type: SEND_MESSAGE_REQUEST, isLoading: true})
         try{
-            const res = await axios.post(url, data)
+            const fd = new FormData()
+            fd.append('admin_id', data.admin_id)
+            fd.append('group_id', data.group_id)
+            fd.append('message', data.message)
+            const res = await axios.post(url, fd)
             if(res.data.success === 0){
-                throw res;
+                throw res.data;
             }
-            dispatch(notificationSuccess(res.message))
+            dispatch(notificationSuccess(res.data.message))
             dispatch({type: SEND_MESSAGE_SUCCESS, isLoading: false})
 
         } catch(error){
+
             dispatch(notificationError(error.message))
             dispatch({type: SEND_MESSAGE_FAILED, isLoading: false})
         }
