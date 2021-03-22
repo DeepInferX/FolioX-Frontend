@@ -94,7 +94,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   };
 
   const groups = useSelector((store) => store.group.groups);
-  groups.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
+  groups?.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
   const adminName = useSelector((store) => store.auth.user.user.name);
   const adminEmail = useSelector((store) => store.auth.user.user.email);
   const planExpireDate = useSelector(

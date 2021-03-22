@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate,  } from "react-router-dom";
 import Button from "components/CustomButton/CustomButton";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import AddIcon from "@material-ui/icons/Add";
@@ -98,7 +98,7 @@ const useMessageStyles = makeStyles((theme) => ({
 }));
 
 
-const GroupHeader = ({groupCreatedAt, deleteGroup, openMessageModal}) => {
+const GroupHeader = ({groupCreatedAt, deleteGroup, openMessageModal, openDeleteModal}) => {
   return (
     <Grid container justify="space-between" alignItems="center">
       <Typography>Group Details</Typography>
@@ -109,8 +109,7 @@ const GroupHeader = ({groupCreatedAt, deleteGroup, openMessageModal}) => {
         />
         <AddIcon style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }} />
         <DeleteOutlineIcon
-          // onClick={() => dispatch(deleteGroup(id, admin_id))}
-          onClick={deleteGroup()}
+          onClick={openDeleteModal}
           style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
         />
         <Typography variant="caption">Created On: {groupCreatedAt}</Typography>
@@ -119,27 +118,6 @@ const GroupHeader = ({groupCreatedAt, deleteGroup, openMessageModal}) => {
   );
 };
 
-const OtherGroups = ({grop_id, groups}) => {
-  
-  const classes = useStyles();
-  return (
-    <Grid className={classes.group}>
-      <Typography>Your other groups</Typography>
-      {groups.map((group) => {
-        if (group.id === grop_id) return;
-        return (
-          <Button
-            key={group.id}
-            text={group.group_name}
-            background="backgroundBlueLight"
-            color="white"
-            to={`../id=${group.id}`}
-          />
-        );
-      })}
-    </Grid>
-  );
-};
 
 const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, students, group_name }) => {
   const classes = useStyles();
@@ -185,18 +163,42 @@ const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, stud
   );
 };
 
-const DeleteStudentModal = (props) => {
-  const { student, handleClose, deleteStudentHandler, ...rest } = props;
+
+const OtherGroups = ({grop_id, groups}) => {
+  
+  const classes = useStyles();
+  return (
+    <Grid className={classes.group}>
+      <Typography>Your other groups</Typography>
+      {groups.map((group) => {
+        if (group.id === grop_id) return;
+        return (
+          <Button
+            key={group.id}
+            text={group.group_name}
+            background="backgroundBlueLight"
+            color="white"
+            to={`../id=${group.id}`}
+          />
+        );
+      })}
+    </Grid>
+  );
+};
+
+
+const DeleteModal = (props) => {
+  const { student, handleClose, deleteStudentHandler, deleteGroupHandler, group, ...rest } = props;
   return (
     <Modal handleClose={handleClose} {...rest}>
       <Grid container direction="column">
         <Typography variant="h6" component="p">
-          {`Are you sure you want delete ${student.name} ?`}
+          {`Are you sure you want delete ${student.name || group.group_name} ?`}
         </Typography>
         <Grid item container justify="center">
           <Button
             text="Delete"
-            onClick={deleteStudentHandler}
+            onClick={() => student?.name ? deleteStudentHandler(): deleteGroupHandler()}
             background="backgroundBrownLight"
           />
           <Button
@@ -309,11 +311,15 @@ const MessageModal = ({  open, student, handleClose, sendMessage, group_name }) 
 };
 
 export default function Group(props) {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const {id: group_id} = useParams();
-  const groupCreatedAt = useSelector((store) => store.group.groups).filter((group) => group.id === group_id)[0].time;
-  const  {students, group_name}  = useSelector((store) => store.group.groups.filter((group) => group.id === group_id)[0] );
-  students.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
+  const currentGroup = useSelector(store => store.group.groups.filter(group=>group.id === group_id)[0]);
+  
+  const groupCreatedAt = currentGroup?.time;
+  const  {students, group_name}  = currentGroup || {};
+  students?.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
   const groups = useSelector((store) => store.group.groups);
 
   const admin_id = useSelector((store) => store.auth.user.access_key.admin_id);
@@ -329,13 +335,19 @@ export default function Group(props) {
     setStudent("");
   };
   const openDeleteModal = (student) => {
-    setStudent(student);
+    if(student)
+      setStudent(student);
     setDeleteModal((open) => !open);
   };
   const deleteStudentHandler = () => {
     dispatch(deleteStudent(student, admin_id));
     handleClose();
   };
+
+  const deleteGroupHandler = () => {
+    dispatch(deleteGroup(group_id, admin_id))
+    handleClose();
+  }
 
   const openUpdateModal = (student) => {
     setStudent(student);
@@ -361,10 +373,11 @@ export default function Group(props) {
     }
   }
 
-  const deleteGroup = () => {
-
+  
+  if(!currentGroup){
+    navigate('/admin/dashboard/home', {replace: true});
+    return <></>
   }
-
 
   return (
     <Grid>
@@ -374,6 +387,7 @@ export default function Group(props) {
         groupCreatedAt={groupCreatedAt} 
         sendMessageToGroup={sendMessageToGroup} 
         deleteGroup={deleteGroup} 
+        openDeleteModal={openDeleteModal}
       />
       <StudentTable
         openDeleteModal={openDeleteModal}
@@ -391,11 +405,13 @@ export default function Group(props) {
         handleClose={handleClose}
         updateStudentHandler={updateStudentHandler}
       />
-      <DeleteStudentModal
+      <DeleteModal
         open={deleteModal}
         handleClose={handleClose}
         student={student}
         deleteStudentHandler={deleteStudentHandler}
+        deleteGroupHandler={deleteGroupHandler}
+        group = {currentGroup}
       />
       
       <MessageModal

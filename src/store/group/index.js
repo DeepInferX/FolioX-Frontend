@@ -2,9 +2,9 @@ import axios from "axios";
 import { notificationError,notificationSuccess } from "store/notification";
 
 //constant
-const GROUP_LOAD_REQUEST = "GROUP_REQUEST";
-const GROUP_LOAD_SUCCESS = "GROUP_SUCCESS";
-const GROUP_LOAD_FAILED = "GROUP_FAILED";
+const GROUP_LOAD_REQUEST = "GROUP_LOAD_REQUEST";
+const GROUP_LOAD_SUCCESS = "GROU_LOAD_SUCCESS";
+const GROUP_LOAD_FAILED = "GROUP_LOAD_FAILED";
 
 const GROUP_DELETE_REQUEST = "GROUP_DELETE_REQUEST";
 const GROUP_DELETE_SUCCESS = "GROUP_DELETE_SUCCESS";
@@ -20,30 +20,10 @@ const UPDATE_STUDENT_FAILED = "UPDATE_STUDENT_FAILED";
 
 //action creater
 
-const loadGroupsRequest = () => {
-  return {
-    type: GROUP_LOAD_REQUEST,
-    isLoading: true,
-  };
-};
-const loadGroupsSuccess = (groups) => {
-  return {
-    type: GROUP_LOAD_SUCCESS,
-    payload: groups,
-    isLoading: false,
-  };
-};
-
-const loadGroupsFailed = () => {
-  return {
-    type: GROUP_LOAD_FAILED,
-    isLoading: false,
-  };
-};
 
 const loadGroups = (id) => {
   return async (dispatch) => {
-    dispatch(loadGroupsRequest());
+    dispatch({type: GROUP_LOAD_REQUEST, isLoading: true,});
     try {
       const res = await axios(
         `http://foliox.deepinferx.in/web/api/admin/students/groups/get?admin=${id}`
@@ -51,53 +31,35 @@ const loadGroups = (id) => {
       const {
         data: { groups },
       } = res;
-      dispatch(loadGroupsSuccess(groups));
+      dispatch({ type: GROUP_LOAD_SUCCESS, payload: groups, isLoading: false,});
     } catch (error) {
-      dispatch(loadGroupsFailed());
+      dispatch({ type: GROUP_LOAD_FAILED, isLoading: false,});
       dispatch(notificationError(error.message));
     }
   };
 };
 
-const deleteGroupRequest = () => ({
-  type: GROUP_DELETE_REQUEST,
-  isLoading: true,
-});
 
-const deleteGroupSuccess = () => ({
-  type: GROUP_DELETE_SUCCESS,
-  isLoading: true,
-});
-
-const deleteGroupFailed = () => ({
-  type: GROUP_LOAD_FAILED,
-  isLoading: true,
-});
 
 const deleteGroup = (group_id, admin_id) => {
+  console.log(group_id, admin_id)
   return async (dispatch) => {
-    dispatch(deleteGroupRequest());
+    dispatch({type: GROUP_DELETE_REQUEST, isLoading: true});
 
     try {
-      const res = await axios({
-        method: "post",
-        url: "http://foliox.deepinferx.in/web/api/admin/students/groups/delete",
-        headers: {
-          "Access-Control-Max-Age": "6000",
-        },
-        data: {
-          admin: admin_id,
-          group: group_id,
-        },
-      });
-      console.log(res);
+      const fd = new FormData();
+      fd.append('admin', admin_id)
+      fd.append('group', group_id)
+      const res = await axios.post("/admin/students/groups/delete",
+        fd
+      );
       if (res.data.success === 0) {
         throw res.data;
       }
-      dispatch(deleteGroupSuccess());
+      dispatch({type: GROUP_DELETE_SUCCESS, isLoading: false, payload: group_id});
       dispatch(notificationSuccess(res.data.message));
     } catch (error) {
-      dispatch(deleteGroupFailed());
+      dispatch({type: GROUP_DELETE_FAILED, isLoading: false});
       dispatch(notificationError(error.message));
     }
   };
@@ -114,7 +76,6 @@ const deleteStudent = (student, admin_id) => {
       fd.append('admin_id', admin_id)
       fd.append('student_id', student.id);
       const res = await axios.post("/admin/students/delete", fd);
-
       if (res.data.success === 0) {
         throw { message: res.data.message };
       }
@@ -203,6 +164,16 @@ const groupReducer = (state = {}, action) => {
             }]
           }
       } 
+
+
+    case GROUP_DELETE_SUCCESS: 
+    {
+      const group_id = action.payload
+      return {
+        ...state,
+        groups: [...state.groups.filter(group => group.id != group_id)]
+      }
+    }
       
     default:
       return state;
