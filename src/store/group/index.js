@@ -18,8 +18,45 @@ const UPDATE_STUDENT_REQUEST = "UPDATE_STUDENT_REQUEST";
 const UPDATE_STUDENT_SUCCESS = "UPDATE_STUDENT_SUCCESS";
 const UPDATE_STUDENT_FAILED = "UPDATE_STUDENT_FAILED";
 
+const ADD_STUDENT_REQUEST = "ADD_STUDENT_REQUEST"
+const ADD_STUDENT_SUCCESS = "ADD_STUDENT_SUCCESS"
+const ADD_STUDENT_FAILED = "ADD_STUDENT_FAILED"
+
 //action creater
 
+const addStudent = (data) => {
+
+  return  dispatch => {
+    return  new Promise((resolve, reject)=>{
+      dispatch({type: ADD_STUDENT_REQUEST, isLoading: true})
+      fetch = async () => {
+        try{
+          const fd = new FormData();
+          fd.append('admin_id', data.admin_id)
+          fd.append('college_id', data.college_id)
+          fd.append('group_id', data.group_id)
+          fd.append('name', data.name)
+          fd.append('email', data.email)
+          fd.append('roll_no', data.roll_no)
+          fd.append('mobile', data.mobile)
+          
+          const res = await axios.post('/admin/students/add',fd)
+          if(res.data.success === 0)
+          throw res.data
+          dispatch({type: ADD_STUDENT_SUCCESS, isLoggedIn: false, payload: res.data.student_details})
+          resolve({message: res.data.message})
+          
+        }catch(error){
+          dispatch({type: ADD_STUDENT_FAILED, isLoggedIn: false})
+          reject({message: error.message})
+        }
+      }
+
+      fetch()
+
+    })
+  }
+}
 
 const loadGroups = (id) => {
   return async (dispatch) => {
@@ -175,6 +212,20 @@ const groupReducer = (state = {}, action) => {
       }
     }
       
+    case ADD_STUDENT_SUCCESS:
+    {
+      const newStudent = action.payload
+      const group_id = newStudent.group_id
+      const remainingGroup = state.groups.filter(group=>group.id !== group_id)
+      const newStudentGroup = state.groups.filter(group => group.id === group_id)[0]
+      return {
+        ...state,
+        groups: [...remainingGroup, {
+          ...newStudentGroup,
+          students: [...newStudentGroup.students, newStudent]
+        }]
+      }
+    }
     default:
       return state;
   }
@@ -183,4 +234,4 @@ const groupReducer = (state = {}, action) => {
 //export
 
 export default groupReducer;
-export { loadGroups, deleteGroup, deleteStudent, updateStudent };
+export { loadGroups, deleteGroup, deleteStudent, updateStudent, addStudent };

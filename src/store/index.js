@@ -10,6 +10,7 @@ import groupReducer from "store/group";
 import authReducer from "store/auth";
 import collegeReducer from "store/college";
 import isLoadingReducer from "store/isLoading";
+import modalReducer from 'store/modal'
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   notification: notificationReducer,
   college: collegeReducer,
   loading: isLoadingReducer,
+  modal: modalReducer
 });
 
 //Persist config

@@ -39,7 +39,7 @@ const sendMessageToGroup = (data) => {
             fd.append('message', data.message)
             const res = await axios.post(url, fd)
             if(res.data.success === 0){
-                throw res.data;
+                throw res.data  ;
             }
             dispatch(notificationSuccess(res.data.message))
             dispatch({type: SEND_MESSAGE_SUCCESS, isLoading: false})

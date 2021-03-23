@@ -22,6 +22,7 @@ import { deleteGroup, deleteStudent, updateStudent } from "store/group/index";
 import {sendMessageToStudent, sendMessageToGroup} from 'store/message'
 import Modal from "components/Modal";
 import Input from "components/CustomInput/CustomInput";
+import {showModal} from 'store/modal'
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -98,7 +99,8 @@ const useMessageStyles = makeStyles((theme) => ({
 }));
 
 
-const GroupHeader = ({groupCreatedAt, deleteGroup, openMessageModal, openDeleteModal}) => {
+const GroupHeader = (props) => {
+  const {group_id, admin_id, college_id, groupCreatedAt, openMessageModal, openDeleteModal, dispatch} = props
   return (
     <Grid container justify="space-between" alignItems="center">
       <Typography>Group Details</Typography>
@@ -107,7 +109,17 @@ const GroupHeader = ({groupCreatedAt, deleteGroup, openMessageModal, openDeleteM
         onClick={() => openMessageModal()}
           style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
         />
-        <AddIcon style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }} />
+        <AddIcon
+          onClick={() => dispatch(showModal({
+            modalType: 'ADD_STUDENT',
+            modalProps: {
+              admin_id,
+              college_id,
+              group_id
+            }
+          })) }
+         style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }} 
+        />
         <DeleteOutlineIcon
           onClick={openDeleteModal}
           style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
@@ -167,6 +179,8 @@ const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, stud
 const OtherGroups = ({grop_id, groups}) => {
   
   const classes = useStyles();
+  if(groups.length === 1)
+    return null;
   return (
     <Grid className={classes.group}>
       <Typography>Your other groups</Typography>
@@ -188,9 +202,9 @@ const OtherGroups = ({grop_id, groups}) => {
 
 
 const DeleteModal = (props) => {
-  const { student, handleClose, deleteStudentHandler, deleteGroupHandler, group, ...rest } = props;
+  const { student, CloseModal, deleteStudentHandler, deleteGroupHandler, group, ...rest } = props;
   return (
-    <Modal handleClose={handleClose} {...rest}>
+    <Modal CloseModal={CloseModal} {...rest}>
       <Grid container direction="column">
         <Typography variant="h6" component="p">
           {`Are you sure you want delete ${student.name || group.group_name} ?`}
@@ -203,7 +217,7 @@ const DeleteModal = (props) => {
           />
           <Button
             text="Cancel"
-            onClick={handleClose}
+            onClick={CloseModal}
             background="backgroundBlueLight"
           />
         </Grid>
@@ -216,27 +230,30 @@ const UpdateStudentModal = (props) => {
   const {
     student,
     setStudent,
-    handleClose,
+    CloseModal,
     updateStudentHandler,
     ...rest
   } = props;
   return (
-    <Modal handleClose={handleClose} {...rest}>
+    <Modal CloseModal={CloseModal} {...rest}>
       <Grid style={{ maxWidth: 300 }}>
         <Typography variant="h6" align="center" gutterBottom>
           Update
         </Typography>
         <Input
+          label="Name"
           value={student.name}
           onChange={(e) => setStudent({ ...student, name: e.target.value })}
           background="brown"
         />
         <Input
+          label="Email"
           value={student.email}
           onChange={(e) => setStudent({ ...student, email: e.target.value })}
           background="brown"
         />
         <Input
+          label="Mobile"
           value={student.mobile}
           background="brown"
           onChange={(e) => setStudent({ ...student, mobile: e.target.value })}
@@ -255,7 +272,7 @@ const UpdateStudentModal = (props) => {
           />
           <Button
             text="Cancel"
-            onClick={handleClose}
+            onClick={CloseModal}
             background="backgroundBlueLight"
           />
         </Grid>
@@ -265,11 +282,11 @@ const UpdateStudentModal = (props) => {
 };
 
 
-const MessageModal = ({  open, student, handleClose, sendMessage, group_name }) => {
+const MessageModal = ({  open, student, CloseModal, sendMessage, group_name }) => {
   const classes = useMessageStyles();
   const [message, setMessage] = useState("")
   return (
-    <Modal open={open} handleClose={handleClose} >
+    <Modal open={open} CloseModal={CloseModal} >
       <Grid style={{minWidth:300}}>
       <Typography variant="h6" align="center" gutterBottom>
           Create Message
@@ -293,13 +310,13 @@ const MessageModal = ({  open, student, handleClose, sendMessage, group_name }) 
             text="Send"
             onClick={()=>{
               sendMessage(message)
-              handleClose()
+              CloseModal()
             }}
             background="yellow"
           />
           <Button
             text="Cancel"
-            onClick={handleClose}
+            onClick={CloseModal}
             background="backgroundBlueLight"
           />
         </Grid>
@@ -312,23 +329,22 @@ const MessageModal = ({  open, student, handleClose, sendMessage, group_name }) 
 
 export default function Group(props) {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
+
   const {id: group_id} = useParams();
   const currentGroup = useSelector(store => store.group.groups.filter(group=>group.id === group_id)[0]);
-  
   const groupCreatedAt = currentGroup?.time;
   const  {students, group_name}  = currentGroup || {};
   students?.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
   const groups = useSelector((store) => store.group.groups);
-
   const admin_id = useSelector((store) => store.auth.user.access_key.admin_id);
+  const college_id = useSelector(store => store.auth.user.college.id)
   const [deleteModal, setDeleteModal] = useState(false);
   const [student, setStudent] = useState("");
   const [updateModal, setUpdateModal] = useState(false);
   const [messageModal, setMessageModal] = useState(false)
 
-  const handleClose = () => {
+  const CloseModal = () => {
     setDeleteModal(false);
     setUpdateModal(false);
     setMessageModal(false);
@@ -341,12 +357,12 @@ export default function Group(props) {
   };
   const deleteStudentHandler = () => {
     dispatch(deleteStudent(student, admin_id));
-    handleClose();
+    CloseModal();
   };
 
   const deleteGroupHandler = () => {
     dispatch(deleteGroup(group_id, admin_id))
-    handleClose();
+    CloseModal();
   }
 
   const openUpdateModal = (student) => {
@@ -356,7 +372,7 @@ export default function Group(props) {
 
   const updateStudentHandler = () => {
     dispatch(updateStudent(student, admin_id));
-    handleClose();
+    CloseModal();
   };
 
   const openMessageModal = (student) => {
@@ -383,11 +399,12 @@ export default function Group(props) {
     <Grid>
       <GroupHeader 
         openMessageModal={openMessageModal}
-        group_id={group_id}
         groupCreatedAt={groupCreatedAt} 
-        sendMessageToGroup={sendMessageToGroup} 
-        deleteGroup={deleteGroup} 
         openDeleteModal={openDeleteModal}
+        group_id={group_id}
+        admin_id = {admin_id}
+        college_id = {college_id}
+        dispatch={dispatch}
       />
       <StudentTable
         openDeleteModal={openDeleteModal}
@@ -402,12 +419,12 @@ export default function Group(props) {
         open={updateModal}
         student={student}
         setStudent={setStudent}
-        handleClose={handleClose}
+        CloseModal={CloseModal}
         updateStudentHandler={updateStudentHandler}
       />
       <DeleteModal
         open={deleteModal}
-        handleClose={handleClose}
+        CloseModal={CloseModal}
         student={student}
         deleteStudentHandler={deleteStudentHandler}
         deleteGroupHandler={deleteGroupHandler}
@@ -417,7 +434,7 @@ export default function Group(props) {
       <MessageModal
        open={messageModal} 
        student={student} 
-       handleClose={handleClose}   
+       CloseModal={CloseModal}   
        sendMessage={sendMessage} 
        group_name={group_name}
        />
