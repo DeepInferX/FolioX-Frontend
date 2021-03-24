@@ -8,12 +8,45 @@ import { useSelector, useDispatch } from 'react-redux';
 import {notificationError} from 'store/notification'
 import {addGroup} from 'store/group'
 import {useNavigate} from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Link from '@material-ui/core/Link';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+      '& > * + *': {
+        marginTop: theme.spacing(2),
+      },
+    },
+  }));
+
+  
+const BreadCrumb = () => {
+    const classes = useStyles();
+    return (
+        <div className={classes.root}>   
+          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+            <Link color="inherit" href="#">
+              Student Groups
+            </Link>
+            <Typography color="textPrimary" >+ New</Typography>
+          </Breadcrumbs>
+        </div>
+      );
+}
 
 const Header = ({addGroupHandler, groupName, setGroupName}) => {
     return (
         <>
         <Grid container alignItems="center" >
-            <Grid item xs={10} >
+            <Grid item xs={12} style={{marginBottom: 50}}>
+                <BreadCrumb />
+                <Typography variant="h6">Create a new group</Typography>
+            </Grid>
+            <Grid item xs={10}  >
                 <Input
                     label="Group Name"
                     background="blueDark"
@@ -21,7 +54,7 @@ const Header = ({addGroupHandler, groupName, setGroupName}) => {
                     onChange={(e)=>setGroupName(e.target.value)}
                 />
             </Grid>
-            <Grid item container justify="flex-end" xs={2} >
+            <Grid item container justify="space-around" xs={2} >
                 <Button
                     text="+ Add Group"
                     background="white"
@@ -96,6 +129,10 @@ const OtherGroups = () => {
     );
   };
 
+  const Footer = () => {
+      return  <Typography align="center">Designed and developed by DeepInderX</Typography>
+  }
+
 export default function AddGroup() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -123,12 +160,17 @@ export default function AddGroup() {
         .then(group => navigate(`/admin/dashboard/group/id=${group.id}`, {replace: true})).catch()
     }
     return (
-        <Grid style={{paddingRight: 200}}>
-            <Grid style={{marginBottom: 50}}>
+        <Grid style={{paddingRight: 200, position: 'relative', height: '90vh'}}>
+            <Grid style={{marginBottom: 30}}>
                 <Header addGroupHandler={addGroupHandler} setGroupName={setGroupName} groupName={groupName}/>
             </Grid>
-            <DropZone acceptedFiles={acceptedFiles} getRootProps={getRootProps} getInputProps={getInputProps}/>
+            <Grid style={{marginBottom: 30}}>
+                <DropZone acceptedFiles={acceptedFiles} getRootProps={getRootProps} getInputProps={getInputProps}/>
+            </Grid>
             <OtherGroups />
+            <div style={{ position: 'absolute', bottom: '0px', width:'100%',   }}>
+                <Footer  />
+            </div>
         </Grid>
     )
 }

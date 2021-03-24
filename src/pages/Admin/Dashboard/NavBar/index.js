@@ -5,26 +5,18 @@ import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import {
   Avatar,
   Box,
-  ListItemLink,
   Divider,
   Drawer,
-  Hidden,
   List,
   Typography,
   makeStyles,
   ListItem,
-  ListItemText,
   Collapse,
-  ListItemIcon,
 } from "@material-ui/core";
 import {
-  AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
-  Lock as LockIcon,
   Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
-  UserPlus as UserPlusIcon,
   Users as UsersIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
@@ -61,8 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   desktopDrawer: {
     width: 300,
-    top: 64,
-    height: "calc(100% - 64px)",
+    height: "100% ",
   },
   avatar: {
     cursor: "pointer",
@@ -85,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = ({ onMobileClose, openMobile }) => {
+const NavBar = () => {
   // For handling student group nested list
   const [open, setOpen] = React.useState(true);
 
@@ -101,23 +92,8 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     (store) => store.auth.user.user.plan_expire_date
   );
   const classes = useStyles();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (openMobile && onMobileClose) {
-      onMobileClose();
-    }
-  }, [location.pathname]);
-
-  // const { admin } = useContext(adminContext);
-  // if (!admin) {
-  //   return <Navigate to="/admin" />;
-  // }
-  //Admin details
-  // const user = admin.user;
-
   const content = (
-    <Box height="100%" display="flex" flexDirection="column">
+    <Box height="100%" display="flex" flexDirection="column" >
       <Box alignItems="center" display="flex" flexDirection="column" p={2}>
         <Avatar
           className={classes.avatar}
@@ -202,18 +178,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   return (
     <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
-          onClose={onMobileClose}
-          open={openMobile}
-          variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
         <Drawer
           anchor="left"
           classes={{ paper: classes.desktopDrawer }}
@@ -222,7 +186,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         >
           {content}
         </Drawer>
-      </Hidden>
     </>
   );
 };
