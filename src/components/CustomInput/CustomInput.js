@@ -27,6 +27,15 @@ const useStyles = makeStyles((theme) => ({
     },
     transition: "background-color 300ms ease-in",
   },
+  blueDark:{
+    backgroundColor: "rgba(57, 74, 171, 0.8)",
+    color: "#fff !important",
+    marginBottom: 0,
+    '&::placeholder':{
+      color: "#fff",
+      opacity: 0.6,
+    }
+  }
 }));
 
 export default function CustomInput({
