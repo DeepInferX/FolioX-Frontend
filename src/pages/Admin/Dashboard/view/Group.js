@@ -1,4 +1,5 @@
 import {
+  Breadcrumbs,
   Grid,
   makeStyles,
   Paper,
@@ -13,7 +14,7 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate,  } from "react-router-dom";
+import { useParams, useNavigate, Link,  } from "react-router-dom";
 import Button from "components/CustomButton/CustomButton";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import AddIcon from "@material-ui/icons/Add";
@@ -23,6 +24,7 @@ import {sendMessageToStudent, sendMessageToGroup} from 'store/message'
 import Modal from "components/Modal";
 import Input from "components/CustomInput/CustomInput";
 import {showModal} from 'store/modal'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -103,7 +105,7 @@ const GroupHeader = (props) => {
   const {group_id, admin_id, college_id, groupCreatedAt, openMessageModal, openDeleteModal, dispatch} = props
   return (
     <Grid container justify="space-between" alignItems="center">
-      <Typography>Group Details</Typography>
+      <Typography variant="h6">Group Details</Typography>
       <Grid xs item container alignItems="center" justify="flex-end">
         <ChatBubbleOutlineIcon
         onClick={() => openMessageModal()}
@@ -327,6 +329,13 @@ const MessageModal = ({  open, student, CloseModal, sendMessage, group_name }) =
   );
 };
 
+
+const Footer = () => {
+  return  <Typography align="center">Designed and developed by DeepInderX</Typography>
+}
+
+
+
 export default function Group(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -396,7 +405,7 @@ export default function Group(props) {
   }
 
   return (
-    <Grid>
+    <Grid style={{position: 'relative', height: '93vh', }}>
       <GroupHeader 
         openMessageModal={openMessageModal}
         groupCreatedAt={groupCreatedAt} 
@@ -438,6 +447,9 @@ export default function Group(props) {
        sendMessage={sendMessage} 
        group_name={group_name}
        />
+       <div style={{ position: 'absolute', bottom: '0px', width:'100%',   }}>
+          <Footer  />
+      </div>
       
     </Grid>
   );
