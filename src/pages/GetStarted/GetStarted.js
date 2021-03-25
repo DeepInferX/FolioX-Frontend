@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   cardContainer: {
     display: "flex",
     justifyContent: "center",
+    alignItems: 'center',
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
     },

@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "25px",
     color: "#000",
     fontWeight: "300",
+    [theme.breakpoints.down('sm')]:{
+      width: '200px',
+      marginBottom: 30
+    }
   },
   text: {
     fontFamily: "Quicksand, sans-serif !important",
@@ -29,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
   img: {
     height: "150px",
+    [theme.breakpoints.down('sm')]:{
+      height: '100px',
+      widht: '100px'
+    }
   },
 }));
 
@@ -36,7 +44,7 @@ export default function ImgMediaCard({ text, to, Img, ...rest }) {
   const classes = useStyles();
 
   return (
-    <NavLink to={to} style={{ textDecoration: "none" }}>
+    <NavLink to={to} style={{ textDecoration: "none",  }}>
       <Box boxShadow={10} className={classNames(classes.root, classes.box)}>
         <div className={classes.root}>
           <CardActionArea>
