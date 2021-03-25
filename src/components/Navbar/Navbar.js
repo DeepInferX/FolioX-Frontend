@@ -10,15 +10,26 @@ const useStyle = makeStyles((theme) => ({
     justifyContent: "space-between",
     padding: `${theme.spacing(5)}px`,
     [theme.breakpoints.down("sm")]: {
-      padding: [theme.spacing(2)],
-      paddingTop: [theme.spacing(5)],
+      padding: [theme.spacing(1)],
+      paddingTop: [theme.spacing(3)],
     },
   },
   navLink: {
     textDecoration: "none",
+    color: '#000',
+    marginRight: theme.spacing(5),
+    [theme.breakpoints.down('sm')]:{
+      marginRight: theme.spacing(2),
+      fontSize: '0.8rem'
+    },
+    '&:last-child':{
+      [theme.breakpoints.down('sm')]:{
+        marginRight: 0,
+      }
+    }
+    
   },
   navLinkButton: {
-    marginLeft: theme.spacing(5),
     backgroundColor: "#F0E9E1",
     borderRadius: theme.spacing(5),
     padding: `0px ${theme.spacing(4)}px`,
@@ -26,6 +37,12 @@ const useStyle = makeStyles((theme) => ({
     paddingBottom: "5px",
     textTransform: "uppercase",
   },
+  logo:{
+    width: 40,
+    [theme.breakpoints.down('sm')]:{
+      width: 30,
+    }
+  }
 }));
 
 export default function Navbar({ logo, appbar }) {
@@ -33,10 +50,13 @@ export default function Navbar({ logo, appbar }) {
   return (
     <div className={classes.root}>
       <div>
-        <img src={logo} width="40" alt="dix logo" />
+        <img src={logo} className={classes.logo} alt="dix logo" />
       </div>
       {appbar && (
         <div>
+          <NavLink className={classes.navLink} to="/">
+            Docs
+          </NavLink>
           <NavLink className={classes.navLink} to="/">
             Contact
           </NavLink>

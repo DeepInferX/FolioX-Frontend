@@ -48,12 +48,24 @@ const useStyle = makeStyles((theme) => ({
   },
 
   title: {
-    fontSize: "3rem",
-    fontWeight: "500",
+    fontFamily: "Quicksand",
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: '70px',
+    lineHeight:' 117.6%',
+
     [theme.breakpoints.down("sm")]: {
       fontSize: "2rem",
+      textAlign: 'center'
     },
   },
+  test: {
+    [theme.breakpoints.down('sm')]:{
+      position: 'relative',
+      right: '-11px'
+
+    }
+  }
 }));
 
 export default function Landing() {
@@ -66,12 +78,16 @@ export default function Landing() {
         <h1 className={classes.title}>
           Apply for jobs <br /> in a click.
         </h1>
-        <CustomButton
-          text={"Get Started"}
-          to={"/get-started/"}
-          background="yellow"
-        />
-        <CustomButton text={"Get App"} logo={circle} border="borderGray" />
+        <div className={classes.test}>
+          <CustomButton
+            text={"Get Started"}
+            to={"/get-started/"}
+            background="yellow"
+          />
+          <CustomButton text={"Get App"} logo={circle} border="borderGray" />
+        </div>
+
+        
       </div>
     );
   };
@@ -87,7 +103,7 @@ export default function Landing() {
             <LandingLeft />
           </Grid>
           <Grid item xs={12} md={6} className={classes.img}>
-            <img src={HeroImg} width="60%" alt="hero imge" />
+            <img src={HeroImg} width="80%" alt="hero imge" />
           </Grid>
         </Grid>
       </Grid>

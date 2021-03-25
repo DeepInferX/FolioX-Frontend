@@ -12,7 +12,6 @@ const useStyle = makeStyles((theme) => ({
     padding: "5px 25px",
     margin: "15px 25px 15px 0px",
     textTransform: "none",
-    // fontFamily: "Quicksand, sans-serif !important",
   },
   navLink: {
     textDecoration: "none",
