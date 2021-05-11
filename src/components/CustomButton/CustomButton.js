@@ -39,11 +39,11 @@ const useStyle = makeStyles((theme) => ({
   borderGray: {
     border: "2px solid #f4f4f4",
   },
-  borderBlue:{
-    border:  '1px solid #394AAB',
-    padding: '10px 25px',
-    marginRight: '0px'
-  }
+  borderBlue: {
+    border: "1px solid #394AAB",
+    padding: "10px 25px",
+    marginRight: "0px",
+  },
 }));
 
 const useColor = makeStyles((theme) => ({

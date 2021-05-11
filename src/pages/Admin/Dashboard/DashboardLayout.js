@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
     overflow: "hidden",
     [theme.breakpoints.up("md")]: {
-      padding: 50,
+      padding: 30,
     },
     [theme.breakpoints.down("md")]: {
       padding: 20,
@@ -49,7 +49,7 @@ const DashboardLayout = (props) => {
 
   return (
     <div className={classes.root}>
-      <NavBar/>
+      <NavBar />
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
