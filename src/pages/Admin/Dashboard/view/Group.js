@@ -14,17 +14,18 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate, Link,  } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Button from "components/CustomButton/CustomButton";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { deleteGroup, deleteStudent, updateStudent } from "store/group/index";
-import {sendMessageToStudent, sendMessageToGroup} from 'store/message'
+import { sendMessageToStudent, sendMessageToGroup } from "store/message";
 import Modal from "components/Modal";
 import Input from "components/CustomInput/CustomInput";
-import {showModal} from 'store/modal'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { showModal } from "store/modal";
+import Footer from "components/Footer/Footer";
+import BreadCrump from "components/BreadCumb/BreadCrumb";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -67,14 +68,14 @@ const useStyles = makeStyles({
 const useMessageStyles = makeStyles((theme) => ({
   root: {
     // width: 350,
-    width:'100%',
+    width: "100%",
     padding: 15,
     paddingTop: 30,
     paddingBottom: 40,
     backgroundColor: "e5e5e5",
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[20],
-    backgroundColor: '#e6e8e6'
+    backgroundColor: "#e6e8e6",
   },
   receiver: {
     paddingLeft: 10,
@@ -82,7 +83,7 @@ const useMessageStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     "& h3": {
       color: "#a1a1a1",
     },
@@ -97,30 +98,49 @@ const useMessageStyles = makeStyles((theme) => ({
     border: "none",
     outline: "none",
     padding: 10,
-  }
+  },
 }));
 
-
 const GroupHeader = (props) => {
-  const {group_id, admin_id, college_id, groupCreatedAt, openMessageModal, openDeleteModal, dispatch} = props
+  const {
+    group_id,
+    admin_id,
+    college_id,
+    groupCreatedAt,
+    openMessageModal,
+    openDeleteModal,
+    group_name,
+    dispatch,
+  } = props;
   return (
     <Grid container justify="space-between" alignItems="center">
-      <Typography variant="h6">Group Details</Typography>
+      <Grid item xs="12">
+        <BreadCrump
+          link1="Student Groups"
+          link2={group_name}
+          title="Group Details"
+        />
+      </Grid>
+
       <Grid xs item container alignItems="center" justify="flex-end">
         <ChatBubbleOutlineIcon
-        onClick={() => openMessageModal()}
+          onClick={() => openMessageModal()}
           style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
         />
         <AddIcon
-          onClick={() => dispatch(showModal({
-            modalType: 'ADD_STUDENT',
-            modalProps: {
-              admin_id,
-              college_id,
-              group_id
-            }
-          })) }
-         style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }} 
+          onClick={() =>
+            dispatch(
+              showModal({
+                modalType: "ADD_STUDENT",
+                modalProps: {
+                  admin_id,
+                  college_id,
+                  group_id,
+                },
+              })
+            )
+          }
+          style={{ color: "rgba(57, 74, 171, 1)", marginRight: 10 }}
         />
         <DeleteOutlineIcon
           onClick={openDeleteModal}
@@ -132,10 +152,15 @@ const GroupHeader = (props) => {
   );
 };
 
-
-const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, students, group_name }) => {
+const StudentTable = ({
+  openDeleteModal,
+  openUpdateModal,
+  openMessageModal,
+  students,
+  group_name,
+}) => {
   const classes = useStyles();
-  students.sort((a, b)=> a.name.lenght > b.name.length)
+  students.sort((a, b) => a.name.lenght > b.name.length);
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
       <Table className={classes.table} aria-label="customized table">
@@ -168,7 +193,12 @@ const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, stud
               >
                 Delete
               </StyledTableCell>
-              <StyledTableCell align="right" onClick={()=>openMessageModal(student)}>Message</StyledTableCell>
+              <StyledTableCell
+                align="right"
+                onClick={() => openMessageModal(student)}
+              >
+                Message
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
@@ -177,12 +207,9 @@ const StudentTable = ({ openDeleteModal, openUpdateModal, openMessageModal, stud
   );
 };
 
-
-const OtherGroups = ({grop_id, groups}) => {
-  
+const OtherGroups = ({ grop_id, groups }) => {
   const classes = useStyles();
-  if(groups.length === 1)
-    return null;
+  if (groups.length === 1) return null;
   return (
     <Grid className={classes.group}>
       <Typography>Your other groups</Typography>
@@ -202,9 +229,15 @@ const OtherGroups = ({grop_id, groups}) => {
   );
 };
 
-
 const DeleteModal = (props) => {
-  const { student, CloseModal, deleteStudentHandler, deleteGroupHandler, group, ...rest } = props;
+  const {
+    student,
+    CloseModal,
+    deleteStudentHandler,
+    deleteGroupHandler,
+    group,
+    ...rest
+  } = props;
   return (
     <Modal CloseModal={CloseModal} {...rest}>
       <Grid container direction="column">
@@ -214,7 +247,9 @@ const DeleteModal = (props) => {
         <Grid item container justify="center">
           <Button
             text="Delete"
-            onClick={() => student?.name ? deleteStudentHandler(): deleteGroupHandler()}
+            onClick={() =>
+              student?.name ? deleteStudentHandler() : deleteGroupHandler()
+            }
             background="backgroundBrownLight"
           />
           <Button
@@ -229,13 +264,8 @@ const DeleteModal = (props) => {
 };
 
 const UpdateStudentModal = (props) => {
-  const {
-    student,
-    setStudent,
-    CloseModal,
-    updateStudentHandler,
-    ...rest
-  } = props;
+  const { student, setStudent, CloseModal, updateStudentHandler, ...rest } =
+    props;
   return (
     <Modal CloseModal={CloseModal} {...rest}>
       <Grid style={{ maxWidth: 300 }}>
@@ -283,14 +313,19 @@ const UpdateStudentModal = (props) => {
   );
 };
 
-
-const MessageModal = ({  open, student, CloseModal, sendMessage, group_name }) => {
+const MessageModal = ({
+  open,
+  student,
+  CloseModal,
+  sendMessage,
+  group_name,
+}) => {
   const classes = useMessageStyles();
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
   return (
-    <Modal open={open} CloseModal={CloseModal} >
-      <Grid style={{minWidth:300}}>
-      <Typography variant="h6" align="center" gutterBottom>
+    <Modal open={open} CloseModal={CloseModal}>
+      <Grid style={{ minWidth: 300 }}>
+        <Typography variant="h6" align="center" gutterBottom>
           Create Message
         </Typography>
         <div className={classes.receiver}>
@@ -299,59 +334,53 @@ const MessageModal = ({  open, student, CloseModal, sendMessage, group_name }) =
         </div>
         <div>
           <Input
-          label="Enter your message..."
+            label="Enter your message..."
             className={classes.message}
             multiline
             background="brown"
             rows="10"
             value={message}
-            onChange={(e)=>setMessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value)}
           />
           <Grid item container justify="center">
-          <Button
-            text="Send"
-            onClick={()=>{
-              sendMessage(message)
-              CloseModal()
-            }}
-            background="yellow"
-          />
-          <Button
-            text="Cancel"
-            onClick={CloseModal}
-            background="backgroundBlueLight"
-          />
-        </Grid>
+            <Button
+              text="Send"
+              onClick={() => {
+                sendMessage(message);
+                CloseModal();
+              }}
+              background="yellow"
+            />
+            <Button
+              text="Cancel"
+              onClick={CloseModal}
+              background="backgroundBlueLight"
+            />
+          </Grid>
         </div>
       </Grid>
-      
     </Modal>
   );
 };
-
-
-const Footer = () => {
-  return  <Typography align="center">Designed and developed by DeepInderX</Typography>
-}
-
-
 
 export default function Group(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const {id: group_id} = useParams();
-  const currentGroup = useSelector(store => store.group.groups.filter(group=>group.id === group_id)[0]);
+  const { id: group_id } = useParams();
+  const currentGroup = useSelector(
+    (store) => store.group.groups.filter((group) => group.id === group_id)[0]
+  );
   const groupCreatedAt = currentGroup?.time;
-  const  {students, group_name}  = currentGroup || {};
-  students?.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
+  const { students, group_name } = currentGroup || {};
+  students?.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
   const groups = useSelector((store) => store.group.groups);
   const admin_id = useSelector((store) => store.auth.user.access_key.admin_id);
-  const college_id = useSelector(store => store.auth.user.college.id)
+  const college_id = useSelector((store) => store.auth.user.college.id);
   const [deleteModal, setDeleteModal] = useState(false);
   const [student, setStudent] = useState("");
   const [updateModal, setUpdateModal] = useState(false);
-  const [messageModal, setMessageModal] = useState(false)
+  const [messageModal, setMessageModal] = useState(false);
 
   const CloseModal = () => {
     setDeleteModal(false);
@@ -360,8 +389,7 @@ export default function Group(props) {
     setStudent("");
   };
   const openDeleteModal = (student) => {
-    if(student)
-      setStudent(student);
+    if (student) setStudent(student);
     setDeleteModal((open) => !open);
   };
   const deleteStudentHandler = () => {
@@ -370,9 +398,9 @@ export default function Group(props) {
   };
 
   const deleteGroupHandler = () => {
-    dispatch(deleteGroup(group_id, admin_id))
+    dispatch(deleteGroup(group_id, admin_id));
     CloseModal();
-  }
+  };
 
   const openUpdateModal = (student) => {
     setStudent(student);
@@ -385,35 +413,41 @@ export default function Group(props) {
   };
 
   const openMessageModal = (student) => {
-    if(student)
-      setStudent(student);
+    if (student) setStudent(student);
     setMessageModal(true);
-  }
+  };
 
   const sendMessage = (message) => {
-    if(student){
-      dispatch(sendMessageToStudent({message, admin_id, stduent_id: student.id}))
-    }else{
-      dispatch(sendMessageToGroup({message, admin_id, group_id}))
+    if (student) {
+      dispatch(
+        sendMessageToStudent({ message, admin_id, stduent_id: student.id })
+      );
+    } else {
+      dispatch(sendMessageToGroup({ message, admin_id, group_id }));
     }
-  }
+  };
 
-  
-  if(!currentGroup){
-    navigate('/admin/dashboard/home', {replace: true});
-    return <></>
+  if (!currentGroup) {
+    navigate("/admin/dashboard/home", { replace: true });
+    return <></>;
   }
 
   return (
-    <Grid style={{position: 'relative', height: '93vh', }}>
-      <GroupHeader 
+    <Grid
+      style={{
+        position: "relative",
+        height: "calc(100vh - 30px)",
+      }}
+    >
+      <GroupHeader
         openMessageModal={openMessageModal}
-        groupCreatedAt={groupCreatedAt} 
+        groupCreatedAt={groupCreatedAt}
         openDeleteModal={openDeleteModal}
         group_id={group_id}
-        admin_id = {admin_id}
-        college_id = {college_id}
+        admin_id={admin_id}
+        college_id={college_id}
         dispatch={dispatch}
+        group_name={group_name}
       />
       <StudentTable
         openDeleteModal={openDeleteModal}
@@ -437,20 +471,19 @@ export default function Group(props) {
         student={student}
         deleteStudentHandler={deleteStudentHandler}
         deleteGroupHandler={deleteGroupHandler}
-        group = {currentGroup}
+        group={currentGroup}
       />
-      
+
       <MessageModal
-       open={messageModal} 
-       student={student} 
-       CloseModal={CloseModal}   
-       sendMessage={sendMessage} 
-       group_name={group_name}
-       />
-       <div style={{ position: 'absolute', bottom: '0px', width:'100%',   }}>
-          <Footer  />
+        open={messageModal}
+        student={student}
+        CloseModal={CloseModal}
+        sendMessage={sendMessage}
+        group_name={group_name}
+      />
+      <div style={{ position: "absolute", bottom: "0px", width: "100%" }}>
+        <Footer />
       </div>
-      
     </Grid>
   );
 }
