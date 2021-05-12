@@ -20,7 +20,7 @@ import {
   Users as UsersIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import { ExpandLess, ExpandMore, PlaylistAdd } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 
 const items = [
@@ -36,9 +36,9 @@ const items = [
   },
 
   {
-    href: "../account",
-    icon: UserIcon,
-    title: "Account",
+    href: "../courses",
+    icon: PlaylistAdd,
+    title: "Courses",
   },
   {
     href: "../settings",
@@ -85,7 +85,7 @@ const NavBar = () => {
   };
 
   const groups = useSelector((store) => store.group.groups);
-  groups?.sort((a, b)=> parseInt(a.id, 10) - parseInt(b.id, 10))
+  groups?.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
   const adminName = useSelector((store) => store.auth.user.user.name);
   const adminEmail = useSelector((store) => store.auth.user.user.email);
   const planExpireDate = useSelector(
@@ -93,7 +93,7 @@ const NavBar = () => {
   );
   const classes = useStyles();
   const content = (
-    <Box height="100%" display="flex" flexDirection="column" >
+    <Box height="100%" display="flex" flexDirection="column">
       <Box alignItems="center" display="flex" flexDirection="column" p={2}>
         <Avatar
           className={classes.avatar}
@@ -178,14 +178,14 @@ const NavBar = () => {
 
   return (
     <>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.desktopDrawer }}
+        open
+        variant="persistent"
+      >
+        {content}
+      </Drawer>
     </>
   );
 };

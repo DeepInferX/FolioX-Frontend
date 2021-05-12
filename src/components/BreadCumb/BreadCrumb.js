@@ -26,13 +26,18 @@ const useStyles = makeStyles((theme) => ({
   separator: {
     margin: "0px",
   },
+  subtitle: {
+    fontFamily: "Quicksand",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: "13px",
+    lineHeight: "15px",
+    color: "rgba(0, 0, 0, 0.7)",
+    marginTop: "5px",
+  },
 }));
 
-export default function BreadCrumb({
-  link1 = "link1",
-  link2 = "link2",
-  title,
-}) {
+export default function BreadCrumb({ link1, link2, title, subtitle }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -40,7 +45,7 @@ export default function BreadCrumb({
         classes={{
           separator: classes.separator,
         }}
-        separator={<NavigateNextIcon fontSize="small" />}
+        separator={link2 ? <NavigateNextIcon fontSize="small" /> : ""}
         aria-label="breadcrumb"
       >
         <Link color="inherit" href="#" className={classes.link}>
@@ -49,6 +54,9 @@ export default function BreadCrumb({
         <Typography className={classes.link}>{link2}</Typography>
       </Breadcrumbs>
       <Typography className={classes.title}>{title}</Typography>
+      {subtitle && (
+        <Typography className={classes.subtitle}>{subtitle}</Typography>
+      )}
     </div>
   );
 }

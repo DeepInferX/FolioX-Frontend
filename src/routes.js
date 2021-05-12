@@ -7,7 +7,8 @@ import AdminRegistrationOverlay from "pages/Admin/AdminRegister/RegistrationOver
 import DashboardLayout from "pages/Admin/Dashboard/DashboardLayout";
 import DashboardHome from "pages/Admin/Dashboard/view/Home";
 import Group from "pages/Admin/Dashboard/view/Group";
-import AddGroup from 'pages/Admin/Dashboard/view/AddGroup'
+import AddGroup from "pages/Admin/Dashboard/view/AddGroup";
+import Courses from "pages/Admin/Dashboard/view/Courses";
 
 const routes = [
   {
@@ -35,7 +36,7 @@ const routes = [
           { path: "home", element: <DashboardHome /> },
           { path: "group/id=:id", element: <Group /> },
           { path: "group/add", element: <AddGroup /> },
-          { path: "account", element: <h1>Account</h1> },
+          { path: "courses", element: <Courses /> },
           { path: "settings", element: <h1>Settings</h1> },
         ],
       },
