@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import NavBar from "./NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadGroups } from "store/group/index";
+import Footer from "components/Footer/Footer";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -24,15 +25,25 @@ const useStyles = makeStyles((theme) => ({
     flex: "1 1 auto",
   },
   content: {
+    position: "relative",
     flex: "1 1 auto",
-    overflow: "auto",
-    height: "100vh",
     overflow: "hidden",
+    height: "100vh",
     [theme.breakpoints.up("md")]: {
       padding: 30,
     },
     [theme.breakpoints.down("md")]: {
       padding: 20,
+    },
+  },
+  outletContainer: {
+    overflowY: "auto",
+    paddingBottom: "100px",
+    [theme.breakpoints.up("md")]: {
+      height: "calc(100vh - 60px)",
+    },
+    [theme.breakpoints.down("md")]: {
+      height: "calc(100vh - 40px)",
     },
   },
 }));
@@ -53,7 +64,10 @@ const DashboardLayout = (props) => {
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
-            <Outlet />
+            <div className={classes.outletContainer}>
+              <Outlet />
+            </div>
+            <Footer />
           </div>
         </div>
       </div>

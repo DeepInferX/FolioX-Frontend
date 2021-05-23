@@ -152,7 +152,6 @@ export default function AddGroup() {
     <Grid
       style={{
         paddingRight: 200,
-        position: "relative",
         height: "calc(100vh - 30px)",
       }}
     >
@@ -176,15 +175,6 @@ export default function AddGroup() {
         />
       </Grid>
       <OtherGroups />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "0px",
-          width: "100%",
-        }}
-      >
-        <Footer />
-      </div>
     </Grid>
   );
 }

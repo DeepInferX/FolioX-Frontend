@@ -435,7 +435,6 @@ export default function Group(props) {
   return (
     <Grid
       style={{
-        position: "relative",
         height: "calc(100vh - 30px)",
       }}
     >
@@ -481,9 +480,6 @@ export default function Group(props) {
         sendMessage={sendMessage}
         group_name={group_name}
       />
-      <div style={{ position: "absolute", bottom: "0px", width: "100%" }}>
-        <Footer />
-      </div>
     </Grid>
   );
 }

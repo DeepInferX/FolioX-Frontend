@@ -1,12 +1,13 @@
 import React from "react";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core";
+import { useField } from "formik";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     borderRadius: theme.shape.borderRadius,
     marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     border: "none",
     outline: "none",
     fontWeight: "600",
@@ -21,34 +22,34 @@ const useStyles = makeStyles((theme) => ({
 
   brown: {
     backgroundColor: "rgba(219, 150, 150, 0.4)",
-    "&:focus": {  
+    "&:focus": {
       backgroundColor: "rgba(240, 233, 225, 0.45)",
       transition: "background-color 300ms ease-out",
     },
     transition: "background-color 300ms ease-in",
   },
-  blueDark:{
+  blueDark: {
     backgroundColor: "rgba(57, 74, 171, 0.8)",
     color: "#fff !important",
     marginBottom: 0,
-    '&::placeholder':{
+    "&::placeholder": {
       color: "#fff",
       opacity: 0.6,
-    }
-  }
+    },
+  },
 }));
 
 export default function CustomInput({
-  children,
   label,
-  background,
-  multiline,
   rows,
   cols,
+  multiline,
+  background,
+  children,
+  field,
   ...rest
 }) {
   const classes = useStyles();
-
   const textFieldClasses = classNames({
     [classes.root]: true,
     [classes[background]]: background,
@@ -75,6 +76,7 @@ export default function CustomInput({
       style={{ width: "100%" }}
       placeholder={label}
       {...rest}
+      {...field}
     >
       {children}
     </input>
