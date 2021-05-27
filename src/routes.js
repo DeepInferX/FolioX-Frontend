@@ -9,6 +9,8 @@ import DashboardHome from "pages/Admin/Dashboard/view/Home";
 import Group from "pages/Admin/Dashboard/view/Group";
 import AddGroup from "pages/Admin/Dashboard/view/AddGroup";
 import Courses from "pages/Admin/Dashboard/view/Courses";
+import Job from "pages/Admin/Dashboard/view/Job";
+import AddJob from "pages/Admin/Dashboard/view/AddJob";
 
 const routes = [
   {
@@ -37,7 +39,8 @@ const routes = [
           { path: "group/id=:id", element: <Group /> },
           { path: "group/add", element: <AddGroup /> },
           { path: "courses", element: <Courses /> },
-          { path: "settings", element: <h1>Settings</h1> },
+          { path: "jobs/id=:id", element: <Job /> },
+          { path: "jobs/add", element: <AddJob /> },
         ],
       },
     ],

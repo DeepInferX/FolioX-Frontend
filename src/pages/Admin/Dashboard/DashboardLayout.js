@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import NavBar from "./NavBar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadGroups } from "store/group/index";
+import { loadJobs } from "store/job";
 import Footer from "components/Footer/Footer";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +56,9 @@ const DashboardLayout = (props) => {
 
   //Load Groups
   useEffect(() => {
-    dispatch(loadGroups(admin_id));
+    dispatch(loadGroups(admin_id)).then(() => {
+      dispatch(loadJobs());
+    });
   }, []);
 
   return (

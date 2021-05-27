@@ -21,6 +21,7 @@ import {
 } from "react-feather";
 import NavItem from "./NavItem";
 import { ExpandLess, ExpandMore, PlaylistAdd } from "@material-ui/icons";
+import SchoolIcon from "@material-ui/icons/School";
 import { useSelector } from "react-redux";
 
 const items = [
@@ -30,7 +31,7 @@ const items = [
     title: "Dashboard",
   },
   {
-    href: "../student-group",
+    // href: "../student-group",
     icon: UsersIcon,
     title: "Student Groups",
   },
@@ -42,8 +43,8 @@ const items = [
   },
   {
     href: "../settings",
-    icon: SettingsIcon,
-    title: "Settings",
+    icon: SchoolIcon,
+    title: "Job Postings",
   },
 ];
 
@@ -78,16 +79,14 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = () => {
   // For handling student group nested list
-  const [open, setOpen] = React.useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  const [openStudentGroups, setOpenStudentGroups] = React.useState(false);
+  const [openJobPostings, setOpenJobPostings] = React.useState(false);
 
   const groups = useSelector((store) => store.group.groups);
   groups?.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
   const adminName = useSelector((store) => store.auth.user.user.name);
   const adminEmail = useSelector((store) => store.auth.user.user.email);
+  const jobs = useSelector((store) => store.jobs);
   const planExpireDate = useSelector(
     (store) => store.auth.user.user.plan_expire_date
   );
@@ -125,7 +124,7 @@ const NavBar = () => {
                 >
                   <ListItem
                     button
-                    onClick={handleClick}
+                    onClick={() => setOpenStudentGroups(!openStudentGroups)}
                     className={classes.studentGroup}
                   >
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -135,11 +134,11 @@ const NavBar = () => {
                       </span>
                     </div>
 
-                    {open ? <ExpandLess /> : <ExpandMore />}
+                    {openStudentGroups ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse
                     style={{ paddingLeft: 30 }}
-                    in={open}
+                    in={openStudentGroups}
                     timeout="auto"
                     unmountOnExit
                   >
@@ -154,6 +153,51 @@ const NavBar = () => {
                             key={idx}
                             href={`id=${group.id}`}
                             title={group.group_name}
+                          />
+                        ))}
+                    </List>
+                  </Collapse>
+                </List>
+              );
+            } else if (item.title === "Job Postings") {
+              return (
+                <List
+                  key={"job postings"}
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  className={classes.root}
+                >
+                  <ListItem
+                    button
+                    onClick={() => setOpenJobPostings(!openJobPostings)}
+                    className={classes.studentGroup}
+                  >
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <SchoolIcon size={10} className={classes.icon} />
+                      <span primary="Job Postings" className={classes.title}>
+                        Job Postings
+                      </span>
+                    </div>
+
+                    {openJobPostings ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse
+                    style={{ paddingLeft: 30 }}
+                    in={openJobPostings}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <List component="div" disablePadding>
+                      <NavItem
+                        href={"../jobs/add"}
+                        title={<span>&#xFF0B; &nbsp; New</span>}
+                      />
+                      {jobs &&
+                        jobs.map((job, idx) => (
+                          <NavItem
+                            key={idx}
+                            href={`../jobs/id=${job.id}`}
+                            title={job.company_name + "-" + job.position}
                           />
                         ))}
                     </List>
