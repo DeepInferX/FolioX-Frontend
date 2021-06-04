@@ -25,7 +25,7 @@ import Modal from "components/Modal";
 import Input from "components/CustomInput/CustomInput";
 import { showModal } from "store/modal";
 import Footer from "components/Footer/Footer";
-import BreadCrump from "components/BreadCumb/BreadCrumb";
+import BreadCrump from "components/BreadCrumb/BreadCrumb";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

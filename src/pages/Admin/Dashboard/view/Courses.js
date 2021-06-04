@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import BreadCrumb from "components/BreadCumb/BreadCrumb";
-import Footer from "components/Footer/Footer";
-import { Divider, makeStyles, Typography } from "@material-ui/core";
-import { loadCourse, deleteCourse, addCourse } from "store/course";
-import { Form, Formik, Field, ErrorMessage, FieldArray } from "formik";
-import { hideModal, showModal } from "store/modal";
+import BreadCrumb from "components/BreadCrumb/BreadCrumb";
+import { makeStyles, Typography } from "@material-ui/core";
+import { loadCourse, addCourse } from "store/course";
+import { Form, Formik, Field, FieldArray } from "formik";
+import { showModal } from "store/modal";
 import Button from "@material-ui/core/Button";
 import Input from "components/CustomInput/CustomInput";
 import findUpdatedBranches from "utils/findUpdatedBranches";
 import findDeletedBranches from "utils/findDeletedBranches";
 import findNewBranches from "utils/findNewBranches";
 import { editBranch } from "store/course";
-import {notificationError, notificationSuccess} from 'store/notification'
+import { notificationError, notificationSuccess } from "store/notification";
 import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
@@ -131,7 +130,7 @@ const EditBranch = ({ course, setToggle }) => {
       newBranches: values.branches,
     });
 
-  //Dispatch action to save edited branch details
+    //Dispatch action to save edited branch details
     dispatch(
       editBranch({
         updatedBranches,
@@ -140,14 +139,15 @@ const EditBranch = ({ course, setToggle }) => {
         admin_id,
         course_id,
       })
-    ).then(res=>{
-      dispatch(notificationSuccess(res.message))
-      setToggle(true)
-    }).catch(error=>{
-      dispatch(notificationError(error.message))
-    })
+    )
+      .then((res) => {
+        dispatch(notificationSuccess(res.message));
+        setToggle(true);
+      })
+      .catch((error) => {
+        dispatch(notificationError(error.message));
+      });
   };
-
 
   return (
     <Formik
@@ -250,7 +250,7 @@ const CourseDetails = ({ course }) => {
       <div>
         <CourseHeader course={course} toggle={toggle} setToggle={setToggle} />
       </div>
-      <div style={{ padding: "20px 150px 20px 20px" }}>
+      <div style={{ padding: "20px 150px 20px 20px", border: "1px solid red" }}>
         {toggle && (
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {course.branches.map((branch, index) => (

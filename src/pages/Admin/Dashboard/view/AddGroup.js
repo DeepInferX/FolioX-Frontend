@@ -9,7 +9,7 @@ import { notificationError } from "store/notification";
 import { addGroup } from "store/group";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import BreadCrumb from "components/BreadCumb/BreadCrumb";
+import BreadCrumb from "components/BreadCrumb/BreadCrumb";
 import Footer from "components/Footer/Footer";
 const Header = ({ addGroupHandler, groupName, setGroupName }) => {
   return (
