@@ -15,6 +15,15 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+.tox-tinymce {
+  border: 0.3px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 4px !important;
+}
+
+.tox-statusbar__branding {
+  display: none;
+}
+
 /* * ::-webkit-scrollbar {
   display: none;
 } */

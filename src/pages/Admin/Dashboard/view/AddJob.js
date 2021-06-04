@@ -75,7 +75,8 @@ const Summary = () => {
           />
           <div
             style={{
-              border: "1px solid black",
+              border: "0.3px solid rgba(0, 0, 0, 0.23)",
+              borderRadius: 4,
               width: "20%",
               position: "relative",
               width: "200px",
@@ -109,7 +110,7 @@ const Summary = () => {
               {!profileImage.imgURL && "Upload Company Image"}
             </label>
           </div>
-          <div style={{ border: "1px solid red", width: "35%" }}>
+          <div style={{ width: "35%" }}>
             <Field
               style={{
                 border: "0.3px solid rgba(0,0,0,0.23)",
@@ -155,7 +156,7 @@ const Summary = () => {
               component={Input}
             />
           </div>
-          <div style={{ border: "1px solid orange", width: "35%" }}>
+          <div style={{ width: "35%" }}>
             <Field
               style={{
                 border: "0.3px solid rgba(0,0,0,0.23)",
@@ -215,25 +216,28 @@ const AdditionalInfromation = () => {
   return (
     <div>
       <HeaderUnderline text="Additional Infromation" />
-      <Editor
-        initialValue="<p>Initial content</p>"
-        apiKey="kjq5cc2movx329ax261rjfdf514zgazt7csybhiw9jd4doug"
-        init={{
-          height: 500,
-          menubar: false,
-          plugins: [
-            "advlist autolink lists link image",
-            "charmap print preview anchor help",
-            "searchreplace visualblocks code",
-            "insertdatetime media table paste wordcount",
-          ],
-          toolbar:
-            "undo redo | formatselect | bold italic | \
+      <div style={{ padding: 20 }}>
+        <Editor
+          initialValue="<p>Initial content</p>"
+          apiKey="kjq5cc2movx329ax261rjfdf514zgazt7csybhiw9jd4doug"
+          init={{
+            max_chars: 100,
+            height: 300,
+            menubar: false,
+            plugins: [
+              "advlist autolink lists link image",
+              "charmap print preview anchor help",
+              "searchreplace visualblocks code",
+              "insertdatetime media table paste wordcount",
+            ],
+            toolbar:
+              "undo redo | formatselect | bold italic | \
             alignleft aligncenter alignright | \
             bullist numlist outdent indent | help",
-        }}
-        onChange={handleEditorChange}
-      />
+          }}
+          onChange={handleEditorChange}
+        />
+      </div>
     </div>
   );
 };
