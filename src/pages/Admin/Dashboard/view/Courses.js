@@ -12,6 +12,7 @@ import findDeletedBranches from "utils/findDeletedBranches";
 import findNewBranches from "utils/findNewBranches";
 import { editBranch } from "store/course";
 import { notificationError, notificationSuccess } from "store/notification";
+import Branch from "components/Branch/Branch";
 import * as Yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,35 +69,6 @@ const CourseHeader = ({ course, toggle, setToggle }) => {
         </div>
       )}
       {!toggle && <Button onClick={() => setToggle(true)}>Cancel</Button>}
-    </div>
-  );
-};
-
-const Branch = ({ branch }) => {
-  return (
-    <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
-      <p
-        style={{
-          fontFamily: "Quicksand",
-          fontstyle: "normal",
-          fontWeight: "500",
-          fontSize: "13px",
-          lineSeight: "15px",
-        }}
-      >
-        {branch.branch_name}&nbsp;,
-      </p>
-      <p
-        style={{
-          fontFamily: "Quicksand",
-          fontStyle: "normal",
-          fontWeight: "normal",
-          fontSize: "12px",
-          lineHeight: "15px",
-        }}
-      >
-        {branch.branch_hod}
-      </p>
     </div>
   );
 };
@@ -254,7 +226,9 @@ const CourseDetails = ({ course }) => {
         {toggle && (
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {course.branches.map((branch, index) => (
-              <Branch branch={branch} key={index} />
+              <div style={{ width: "50%" }}>
+                <Branch branch={branch} key={index} />
+              </div>
             ))}
           </div>
         )}

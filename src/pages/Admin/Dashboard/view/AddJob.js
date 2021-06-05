@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BreadCrumb from "components/BreadCrumb/BreadCrumb";
-import { Typography } from "@material-ui/core";
+import {
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 import Input from "components/CustomInput/CustomInput";
 import { Form, Formik, Field } from "formik";
 import { Editor } from "@tinymce/tinymce-react";
 import HeaderUnderline from "components/Header/HeaderUnderline";
+import Branch from "components/Branch/Branch";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const Summary = () => {
   const [profileImage, setProfileImage] = useState({
@@ -242,7 +249,352 @@ const AdditionalInfromation = () => {
   );
 };
 
+const ApplicableCourse = ({ courses }) => {
+  const [state, setState] = useState({
+    courses: [],
+    visibleCourseIndex: 0,
+    branchStates: [],
+    selectAllStates: [],
+  });
+
+  useEffect(() => {
+    const mat = new Array(courses.length);
+    for (let i = 0; i < mat.length; i++)
+      mat[i] = new Array(courses[i].branches.length).fill(false);
+
+    const selectAllStates = new Array(courses.length).fill(false);
+
+    setState({
+      ...state,
+      courses,
+      visibleCourseIndex: 0,
+      branchStates: [...mat],
+      selectAllStates: [...selectAllStates],
+    });
+  }, []);
+
+  const courseClickHandler = (visibleCourseIndex) => {
+    setState({ ...state, visibleCourseIndex });
+  };
+  const branchStateHandler = (branchIndex) => {
+    const newBranchStates = state.branchStates;
+    newBranchStates[state.visibleCourseIndex][branchIndex] =
+      !newBranchStates[state.visibleCourseIndex][branchIndex];
+    setState({ ...state, branchStates: [...newBranchStates] });
+  };
+
+  const selectAllHandler = () => {
+    const newSelectAll = state.selectAllStates;
+    newSelectAll[state.visibleCourseIndex] =
+      !newSelectAll[state.visibleCourseIndex];
+
+    const newBranchStates = state.branchStates;
+    if (newSelectAll[state.visibleCourseIndex]) {
+      newBranchStates[state.visibleCourseIndex].fill(true);
+    } else newBranchStates[state.visibleCourseIndex].fill(false);
+    setState({
+      ...state,
+      selectAllStates: [...newSelectAll],
+      branchStates: [...newBranchStates],
+    });
+  };
+
+  return (
+    <div>
+      <HeaderUnderline text="Applicable Course" />
+      <div style={{ padding: "20px 0 20px 0" }}>
+        <div style={{ border: "0.3px solid rgba(0, 0, 0, 0.23)" }}>
+          <div style={{ borderBottom: "0.3px solid rgba(0,0,0,0.53)" }}>
+            {state.courses.map((course, index) => (
+              <button
+                style={{
+                  marginRight: 20,
+                  border: "none",
+                  background: "transparent",
+                  padding: 10,
+                  cursor: "pointer",
+                }}
+                key={course.id}
+                onClick={() => courseClickHandler(index)}
+              >
+                {course.name}
+              </button>
+            ))}
+          </div>
+          <div style={{ padding: "20px 40px 20px 40px" }}>
+            <Grid container>
+              <Grid item xs={12} style={{ paddingBottom: "10px" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={Boolean(
+                        state.selectAllStates[state.visibleCourseIndex] | false
+                      )}
+                      onChange={selectAllHandler}
+                      name="selectAllStates"
+                    />
+                  }
+                  label={
+                    <Branch
+                      branch={{ branch_hod: "Select all course in B.Tech" }}
+                    />
+                  }
+                />
+              </Grid>
+
+              {state.courses[state.visibleCourseIndex]?.branches.map(
+                (branch, index) => (
+                  <Grid container item xs={6}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={
+                            state.branchStates[state.visibleCourseIndex][index]
+                          }
+                          onChange={() => branchStateHandler(index)}
+                          name="checkedA"
+                        />
+                      }
+                      label={<Branch branch={branch} />}
+                    />
+                  </Grid>
+                )
+              )}
+            </Grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function AddJob() {
+  const courses = [
+    {
+      id: 1,
+      name: "B.Tech",
+      branches: [
+        {
+          id: 1,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 2,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 3,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 4,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 5,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 6,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 7,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 8,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 9,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 10,
+          branch_name: "Computer Science",
+          branch_hod: "Mr Maha Backland",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "M.Tech",
+      branches: [
+        {
+          id: 1,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 2,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 3,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 4,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 5,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 6,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 7,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 8,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 9,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 10,
+          branch_name: "Mechanical Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: "MBA",
+      branches: [
+        {
+          id: 1,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 2,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 3,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 4,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 5,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 6,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 7,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 8,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 9,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 10,
+          branch_name: "Civil Engineering",
+          branch_hod: "Mr Maha Backland",
+        },
+      ],
+    },
+    {
+      id: 4,
+      name: "BSc",
+      branches: [
+        {
+          id: 1,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 2,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 3,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 4,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 5,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 6,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 7,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 8,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 9,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+        {
+          id: 10,
+          branch_name: "Bachelor of Science",
+          branch_hod: "Mr Maha Backland",
+        },
+      ],
+    },
+  ];
   return (
     <div>
       <BreadCrumb
@@ -258,6 +610,9 @@ export default function AddJob() {
         </div>
         <div style={{ border: "2px solid black" }}>
           <AdditionalInfromation />
+        </div>
+        <div style={{ border: "2px solid black" }}>
+          <ApplicableCourse courses={courses} />
         </div>
       </div>
     </div>
