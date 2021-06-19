@@ -6,7 +6,6 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 import ModalRoot from "components/Modal/ModalRoot";
-
 function App() {
   axios.defaults.baseURL = "http://foliox.deepinferx.in/web/api";
   const isLoading = useSelector((store) => store.loading.isLoading);

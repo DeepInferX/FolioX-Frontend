@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import BreadCrumb from "components/BreadCrumb/BreadCrumb";
 import {
   FormControlLabel,
@@ -12,6 +13,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import HeaderUnderline from "components/Header/HeaderUnderline";
 import Branch from "components/Branch/Branch";
 import Checkbox from "@material-ui/core/Checkbox";
+import Button from "components/CustomButton/CustomButton";
 
 const Summary = () => {
   const [profileImage, setProfileImage] = useState({
@@ -302,23 +304,17 @@ const ApplicableCourse = ({ courses }) => {
   return (
     <div>
       <HeaderUnderline text="Applicable Course" />
-      <div style={{ padding: "20px 0 20px 0" }}>
+      <div style={{ padding: 20 }}>
         <div style={{ border: "0.3px solid rgba(0, 0, 0, 0.23)" }}>
           <div style={{ borderBottom: "0.3px solid rgba(0,0,0,0.53)" }}>
             {state.courses.map((course, index) => (
-              <button
-                style={{
-                  marginRight: 20,
-                  border: "none",
-                  background: "transparent",
-                  padding: 10,
-                  cursor: "pointer",
-                }}
+              <Button
                 key={course.id}
+                text={course.name}
+                background="backgroundBlueLight"
+                color="white"
                 onClick={() => courseClickHandler(index)}
-              >
-                {course.name}
-              </button>
+              />
             ))}
           </div>
           <div style={{ padding: "20px 40px 20px 40px" }}>
@@ -368,7 +364,61 @@ const ApplicableCourse = ({ courses }) => {
   );
 };
 
+const EligibilityCriteria = () => {
+  const handleEditorChange = (e) => {
+    console.log("Content was updated:", e.target.getContent());
+  };
+
+  return (
+    <div>
+      <HeaderUnderline text="Eligiblity Criteria" />
+      <div style={{ padding: 20 }}>
+        <Editor
+          initialValue="<p>Initial content</p>"
+          apiKey="kjq5cc2movx329ax261rjfdf514zgazt7csybhiw9jd4doug"
+          init={{
+            max_chars: 100,
+            height: 300,
+            menubar: false,
+            plugins: [
+              "advlist autolink lists link image",
+              "charmap print preview anchor help",
+              "searchreplace visualblocks code",
+              "insertdatetime media table paste wordcount",
+            ],
+            toolbar:
+              "undo redo | formatselect | bold italic | \
+            alignleft aligncenter alignright | \
+            bullist numlist outdent indent | help",
+          }}
+          onChange={handleEditorChange}
+        />
+      </div>
+    </div>
+  );
+};
+
+const StudentGroups = ({ groups }) => {
+  return (
+    <>
+      <HeaderUnderline text="Student Groups" />
+      <Grid>
+        {groups.map((group) => {
+          return (
+            <Button
+              key={group.id}
+              text={group.group_name}
+              background="backgroundBlueLight"
+              color="white"
+            />
+          );
+        })}
+      </Grid>
+    </>
+  );
+};
 export default function AddJob() {
+  const groups = useSelector((store) => store.group.groups);
   const courses = [
     {
       id: 1,
@@ -602,18 +652,12 @@ export default function AddJob() {
         title="View your courses."
         subtitle="Students will be able to select any one from these courses."
       />
-      <div
-        style={{ padding: "20px 150px 20px 0px", border: "1px solid yellow" }}
-      >
-        <div style={{ border: "2px solid red" }}>
-          <Summary />
-        </div>
-        <div style={{ border: "2px solid black" }}>
-          <AdditionalInfromation />
-        </div>
-        <div style={{ border: "2px solid black" }}>
-          <ApplicableCourse courses={courses} />
-        </div>
+      <div style={{ padding: "20px 150px 20px 0px" }}>
+        <Summary />
+        <AdditionalInfromation />
+        <ApplicableCourse courses={courses} />
+        <EligibilityCriteria />
+        <StudentGroups groups={groups} />
       </div>
     </div>
   );
