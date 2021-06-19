@@ -14,6 +14,7 @@ import HeaderUnderline from "components/Header/HeaderUnderline";
 import Branch from "components/Branch/Branch";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "components/CustomButton/CustomButton";
+import DateTimePicker from "components/DateTimePicker/DateTimePicker";
 
 const Summary = () => {
   const [profileImage, setProfileImage] = useState({
@@ -417,6 +418,7 @@ const StudentGroups = ({ groups }) => {
     </>
   );
 };
+
 export default function AddJob() {
   const groups = useSelector((store) => store.group.groups);
   const courses = [
@@ -658,6 +660,30 @@ export default function AddJob() {
         <ApplicableCourse courses={courses} />
         <EligibilityCriteria />
         <StudentGroups groups={groups} />
+        <div style={{ padding: 20 }}>
+          <Typography align="center">
+            A notification will be sent to all the students in the selected
+            student groups and <br /> they will only be alble to apply for this
+            Job.
+          </Typography>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <DateTimePicker />
+          <div style={{ marginLeft: 20 }}>
+            <Button
+              text="Open Application"
+              background="backgroundBlueLight"
+              color="white"
+              onClick={(e) => {}}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
