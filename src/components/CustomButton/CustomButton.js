@@ -35,6 +35,10 @@ const useStyle = makeStyles((theme) => ({
   brown: {
     backgroundColor: "#DB9696",
   },
+  purple: {
+    backgroundColor: "#9049EB",
+    color: "#fff"
+  },
 
   borderGray: {
     border: "2px solid #f4f4f4",

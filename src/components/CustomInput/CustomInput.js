@@ -28,6 +28,14 @@ const useStyles = makeStyles((theme) => ({
     },
     transition: "background-color 300ms ease-in",
   },
+  purple: {
+    backgroundColor: " rgba(170, 132, 219, 0.4)",
+    "&:focus": {
+      backgroundColor: "rgba(240, 233, 225, 0.45)",
+      transition: "background-color 300ms ease-out",
+    },
+    transition: "background-color 300ms ease-in",
+  },
   blueDark: {
     backgroundColor: "rgba(57, 74, 171, 0.8)",
     color: "#fff !important",

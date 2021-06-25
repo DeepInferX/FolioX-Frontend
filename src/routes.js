@@ -1,6 +1,6 @@
 import Landing from "pages/Landing/Landing";
 import GetStarted from "pages/GetStarted/GetStarted";
-import AdminLogin from "pages/Admin/AdminLogin/AdminLogin";
+import Login from "pages/Login/Login";
 import AdminRegister from "pages/Admin/AdminRegister/AdminRegister";
 import AdminOption from "pages/Admin/AdminOption/AdminOption";
 import AdminRegistrationOverlay from "pages/Admin/AdminRegister/RegistrationOverlay";
@@ -23,8 +23,8 @@ const routes = [
   {
     path: "admin",
     children: [
-      { path: "/", element: <AdminLogin /> },
-      { path: "login", element: <AdminLogin /> },
+      { path: "/", element: <Login variant="admin" /> },
+      { path: "login", element: <Login variant="admin"/> },
       { path: "register", element: <AdminRegister /> },
       { path: "option", element: <AdminOption /> },
       {
@@ -45,6 +45,12 @@ const routes = [
       },
     ],
   },
+  {
+    path:"student",
+    children:[
+      {path: "/login", element:<Login variant="student" />}
+    ]
+  }
 ];
 
 export default routes;

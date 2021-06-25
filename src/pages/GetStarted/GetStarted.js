@@ -63,7 +63,7 @@ export default function Landing() {
           </Typography>
           <Grid className={classes.cardContainer}>
             <Card Img={Teacher} text={"Teacher/Admin"} to="/admin/option/" />
-            <Card Img={Student} text={"Student"} to="#" />
+            <Card Img={Student} text={"Student"} to="/student/login" />
           </Grid>
         </Grid>
       </Grid>

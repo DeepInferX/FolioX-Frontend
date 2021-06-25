@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     borderRadius: theme.shape.borderRadius,
     marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     border: "none",
     outline: "none",
     fontWeight: "600",
@@ -22,6 +22,14 @@ const useStyles = makeStyles((theme) => ({
 
   brown: {
     backgroundColor: "rgba(219, 150, 150, 0.4)",
+    "&:focus": {
+      backgroundColor: "rgba(240, 233, 225, 0.45)",
+      transition: "background-color 300ms ease-out",
+    },
+    transition: "background-color 300ms ease-in",
+  },
+  purple: {
+    backgroundColor: "rgba(170, 132, 219, 0.4)",
     "&:focus": {
       backgroundColor: "rgba(240, 233, 225, 0.45)",
       transition: "background-color 300ms ease-out",

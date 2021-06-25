@@ -31,8 +31,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-export default function AdminLogin(props) {
-  console.log("Admin Login page rendered");
+export default function Login({variant}) {
   const classes = useStyle();
   const dispatch = useDispatch();
 
@@ -48,6 +47,8 @@ export default function AdminLogin(props) {
     console.log(e.target.value);
     setLoginCredentials({ ...loginCredentials, college_id: e.target.value });
   };
+
+  const theme = variant === 'student' ? "purple" : "brown";
 
   //Dispatch action  to fetch list of registered colleges
   useEffect(() => {
@@ -99,7 +100,7 @@ export default function AdminLogin(props) {
           >
             <Grid item xs={10} sm={4}>
               <Select
-                background="brown"
+                background={theme}
                 value={loginCredentials.college_id}
                 changeHandler={setSelectedCollege}
                 required
@@ -115,7 +116,7 @@ export default function AdminLogin(props) {
               </Select>
               <CustomInput
                 label="Email"
-                background="brown"
+                background={theme}
                 fullWidth
                 required
                 value={loginCredentials.email || ""}
@@ -128,7 +129,7 @@ export default function AdminLogin(props) {
               ></CustomInput>
               <CustomInput
                 label="Password"
-                background="brown"
+                background={theme}
                 fullWidth
                 required
                 type="password"
@@ -150,7 +151,8 @@ export default function AdminLogin(props) {
               <CustomButton
                 type="submit"
                 text={"Continue"}
-                background="brown"
+                //button will have darker version of theme color
+                background={theme}
               />
             </Grid>
           </Grid>
