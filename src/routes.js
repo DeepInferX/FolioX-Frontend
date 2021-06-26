@@ -11,6 +11,19 @@ import AddGroup from "pages/Admin/Dashboard/view/AddGroup";
 import Courses from "pages/Admin/Dashboard/view/Courses";
 import Job from "pages/Admin/Dashboard/view/Job";
 import AddJob from "pages/Admin/Dashboard/view/AddJob";
+import StudentLayout  from "pages/StudentLayout/StudentLayout";
+
+import {Outlet} from 'react-router-dom'
+
+
+
+const StudentDashboard = () => {
+  return <p>Student Dashboard</p>
+}
+
+const Resume = () => {
+  return <p>Resume</p>
+}
 
 const routes = [
   {
@@ -46,11 +59,20 @@ const routes = [
     ],
   },
   {
-    path:"student",
-    children:[
-      {path: "/login", element:<Login variant="student" />}
-    ]
-  }
+    path: "student",
+    element: <StudentLayout />,
+   children: [
+     {path: "/", element: <StudentDashboard />},
+     {path: "dashboard", element: <StudentDashboard />},
+     {path: "resume", element: <Resume />},
+     {path: "jobs/id=:id", element: <p>Jobs</p>}
+   ]
+  },
+  {
+    path: "student/login",
+    element: <Login variant="student" />,
+   
+  },
 ];
 
 export default routes;
