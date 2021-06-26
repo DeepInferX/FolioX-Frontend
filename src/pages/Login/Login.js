@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+
 //@material-ui core components
 import { Grid, makeStyles } from "@material-ui/core";
 
@@ -16,8 +17,10 @@ import fx from "assets/logo/fx.png";
 import image from "assets/img/admin-login-image.svg";
 
 //action creater
-import { login } from "store/auth";
+import { login as authLogin } from "store/auth";
 import { loadCollegeList } from "store/college";
+
+import {login as studentLogin} from 'store/student'
 
 const circle = <span>&#9675;&nbsp;</span>;
 
@@ -63,7 +66,10 @@ export default function Login({variant}) {
     formData.append("email", loginCredentials.email);
     formData.append("password", loginCredentials.password);
 
-    dispatch(login(formData));
+    if(variant === 'student')
+      dispatch(studentLogin(formData))
+    else
+      dispatch(authLogin(formData));
   };
 
   const user = useSelector((store) => store.auth.user?.auth_token);

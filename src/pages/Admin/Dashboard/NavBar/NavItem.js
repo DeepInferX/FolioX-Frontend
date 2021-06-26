@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium,
     justifyContent: "flex-start",
     letterSpacing: 0,
-    padding: "10px 8px",
+    padding: "10px 16px",
     textTransform: "none",
     width: "100%",
   },
@@ -49,7 +49,7 @@ const NavItem = ({ className, href, icon: Icon, title, ...rest }) => {
         activeClassName={classes.active}
         className={classes.button}
         component={RouterLink}
-        to={`group/${href}`}
+        to={`${href}`}
       >
         {Icon && <Icon className={classes.icon} size="20" />}
         <span className={classes.title}>{title}</span>
