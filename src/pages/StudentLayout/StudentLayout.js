@@ -111,8 +111,8 @@ const StudentLayout = () => {
         >
           <NotificationBadge count={1} />
         </Grid>
-        <Grid style={{ border: "1px solid red" }}>
-          <Box px={4}>
+        <Grid>
+          <Box px={10}>
             <Outlet />
           </Box>
         </Grid>

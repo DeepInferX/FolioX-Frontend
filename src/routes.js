@@ -11,19 +11,14 @@ import AddGroup from "pages/Admin/Dashboard/view/AddGroup";
 import Courses from "pages/Admin/Dashboard/view/Courses";
 import Job from "pages/Admin/Dashboard/view/Job";
 import AddJob from "pages/Admin/Dashboard/view/AddJob";
-import StudentLayout  from "pages/StudentLayout/StudentLayout";
+import StudentLayout from "pages/StudentLayout/StudentLayout";
+import StudentDashboard from "pages/StudentDashboard/StuduentDashboard";
 
-import {Outlet} from 'react-router-dom'
-
-
-
-const StudentDashboard = () => {
-  return <p>Student Dashboard</p>
-}
+import { Outlet } from "react-router-dom";
 
 const Resume = () => {
-  return <p>Resume</p>
-}
+  return <p>Resume</p>;
+};
 
 const routes = [
   {
@@ -37,7 +32,7 @@ const routes = [
     path: "admin",
     children: [
       { path: "/", element: <Login variant="admin" /> },
-      { path: "login", element: <Login variant="admin"/> },
+      { path: "login", element: <Login variant="admin" /> },
       { path: "register", element: <AdminRegister /> },
       { path: "option", element: <AdminOption /> },
       {
@@ -61,17 +56,16 @@ const routes = [
   {
     path: "student",
     element: <StudentLayout />,
-   children: [
-     {path: "/", element: <StudentDashboard />},
-     {path: "dashboard", element: <StudentDashboard />},
-     {path: "resume", element: <Resume />},
-     {path: "jobs/id=:id", element: <p>Jobs</p>}
-   ]
+    children: [
+      { path: "/", element: <StudentDashboard /> },
+      { path: "dashboard", element: <StudentDashboard /> },
+      { path: "resume", element: <Resume /> },
+      { path: "jobs/id=:id", element: <p>Jobs</p> },
+    ],
   },
   {
     path: "student/login",
     element: <Login variant="student" />,
-   
   },
 ];
 
