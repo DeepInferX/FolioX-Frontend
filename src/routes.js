@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+
 import Landing from "pages/Landing/Landing";
 import GetStarted from "pages/GetStarted/GetStarted";
 import Login from "pages/Login/Login";
@@ -9,7 +12,7 @@ import DashboardHome from "pages/Admin/Dashboard/view/Home";
 import Group from "pages/Admin/Dashboard/view/Group";
 import AddGroup from "pages/Admin/Dashboard/view/AddGroup";
 import Courses from "pages/Admin/Dashboard/view/Courses";
-import Job from "pages/Admin/Dashboard/view/Job";
+import Job from "pages/Job/Job";
 import AddJob from "pages/Admin/Dashboard/view/AddJob";
 import StudentLayout from "pages/StudentLayout/StudentLayout";
 import StudentDashboard from "pages/StudentDashboard/StuduentDashboard";
@@ -18,6 +21,14 @@ import { Outlet } from "react-router-dom";
 
 const Resume = () => {
   return <p>Resume</p>;
+};
+
+const PrivateRoute = ({ Component }) => {
+  const student = useSelector((store) => store.student.id);
+  if (!student) {
+    return <Navigate to={"login"} />;
+  }
+  return <Component />;
 };
 
 const routes = [
@@ -57,10 +68,13 @@ const routes = [
     path: "student",
     element: <StudentLayout />,
     children: [
-      { path: "/", element: <StudentDashboard /> },
+      {
+        path: "/",
+        element: <PrivateRoute Component={StudentDashboard}></PrivateRoute>,
+      },
       { path: "dashboard", element: <StudentDashboard /> },
       { path: "resume", element: <Resume /> },
-      { path: "jobs/id=:id", element: <p>Jobs</p> },
+      { path: "jobs/id=:id", element: <Job /> },
     ],
   },
   {

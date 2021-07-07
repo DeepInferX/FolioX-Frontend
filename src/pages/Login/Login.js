@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-
 //@material-ui core components
 import { Grid, makeStyles } from "@material-ui/core";
 
@@ -17,10 +16,9 @@ import fx from "assets/logo/fx.png";
 import image from "assets/img/admin-login-image.svg";
 
 //action creater
-import { login as authLogin } from "store/auth";
+import { login as authLogin, login } from "store/auth";
 import { loadCollegeList } from "store/college";
-
-import {login as studentLogin} from 'store/student'
+import { login as studentLogin } from "store/student";
 
 const circle = <span>&#9675;&nbsp;</span>;
 
@@ -34,7 +32,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-export default function Login({variant}) {
+export default function Login({ variant }) {
   const classes = useStyle();
   const dispatch = useDispatch();
 
@@ -44,6 +42,7 @@ export default function Login({variant}) {
     email: undefined,
     password: undefined,
     college_id: undefined,
+    roll_no: undefined,
   });
 
   const setSelectedCollege = (e) => {
@@ -51,7 +50,7 @@ export default function Login({variant}) {
     setLoginCredentials({ ...loginCredentials, college_id: e.target.value });
   };
 
-  const theme = variant === 'student' ? "purple" : "brown";
+  const theme = variant === "student" ? "purple" : "brown";
 
   //Dispatch action  to fetch list of registered colleges
   useEffect(() => {
@@ -62,22 +61,34 @@ export default function Login({variant}) {
   const submitHandler = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("college_id", loginCredentials.college_id);
-    formData.append("email", loginCredentials.email);
-    formData.append("password", loginCredentials.password);
 
-    if(variant === 'student')
-      dispatch(studentLogin(formData))
-    else
+    if (variant === "student") {
+      formData.append("college_id", loginCredentials.college_id);
+      formData.append("roll_no", loginCredentials.roll_no);
+      formData.append("password", loginCredentials.password);
+      dispatch(studentLogin(formData));
+    } else {
+      formData.append("college_id", loginCredentials.college_id);
+      formData.append("email", loginCredentials.email);
+      formData.append("password", loginCredentials.password);
       dispatch(authLogin(formData));
+    }
   };
 
+  //Check for Admin login
   const user = useSelector((store) => store.auth.user?.auth_token);
+
+  //Check for student login
+  const student = useSelector((store) => store.student.id);
 
   //If login successfull
   const navigate = useNavigate();
   if (user) {
     navigate("../dashboard/home");
+  }
+  if (student) {
+    console.log("routing");
+    navigate("../");
   }
   return (
     <>
@@ -121,17 +132,28 @@ export default function Login({variant}) {
                 ))}
               </Select>
               <CustomInput
-                label="Email"
+                label={variant === "student" ? "Roll No." : "Email"}
                 background={theme}
                 fullWidth
                 required
-                value={loginCredentials.email || ""}
-                onChange={(e) =>
-                  setLoginCredentials({
-                    ...loginCredentials,
-                    email: e.target.value,
-                  })
+                value={
+                  variant === "student"
+                    ? loginCredentials.roll_no
+                    : loginCredentials.email
                 }
+                onChange={(e) => {
+                  if (variant === "student") {
+                    setLoginCredentials({
+                      ...loginCredentials,
+                      roll_no: e.target.value,
+                    });
+                  } else {
+                    setLoginCredentials({
+                      ...loginCredentials,
+                      email: e.target.value,
+                    });
+                  }
+                }}
               ></CustomInput>
               <CustomInput
                 label="Password"

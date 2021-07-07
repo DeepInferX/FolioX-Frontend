@@ -13,6 +13,7 @@ import isLoadingReducer from "store/isLoading";
 import modalReducer from "store/modal";
 import courseReducer from "store/course";
 import jobReducer from "store/job";
+import studentReducer from "store/student";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   modal: modalReducer,
   course: courseReducer,
   jobs: jobReducer,
+  student: studentReducer,
 });
 
 //Persist config
