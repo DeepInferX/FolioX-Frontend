@@ -6,8 +6,9 @@ import {
   makeStyles,
   Button,
 } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { applyJob } from "store/student";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,8 +29,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Job() {
+  const dispatch = useDispatch();
   const jobId = useParams().id;
   const job = useSelector((store) => store.student.jobs[jobId]);
+  const studentId = useSelector((store) => store.student.id);
   const classes = useStyles();
   return (
     <Box pr={25} mb={50}>
@@ -268,7 +271,11 @@ export default function Job() {
         <Grid container justify="flex-end" alignItems="center">
           <Typography>Deadline is in 2 minutes and 40 seconds</Typography>
           <Box ml={1}>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => dispatch(applyJob(studentId, jobId))}
+            >
               Apply
             </Button>
           </Box>

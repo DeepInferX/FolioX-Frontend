@@ -1,7 +1,6 @@
 import axios from "axios";
 import { notificationError, notificationSuccess } from "store/notification";
 import { normalize, schema } from "normalizr";
-import { ContactsOutlined } from "@material-ui/icons";
 import convertToFormData from "utils/convertToFormData";
 
 //constant
@@ -21,7 +20,46 @@ const UPDATE_RESUME_REQUEST = "UPDATE_RESUME_REQUEST";
 const UPDATE_RESUME_SUCCESS = "UPDATE_RESUME_SUCCESS";
 const UPDATE_RESUME_FAILED = "UPDATE_RESUME_FAILED";
 
+const APPLY_JOB_REQUEST = "APPLY_JOB_REQUEST";
+const APPLY_JOB_SUCCESS = "APPLY_JOB_SUCCESS";
+const APPLY_JOB_FAILED = "APPLY_JOB_FAILED";
+
 //action creater
+
+const applyJobRequest = () => {
+  console.log("hi");
+  return {
+    type: APPLY_JOB_REQUEST,
+    isLoading: true,
+  };
+};
+
+const applyJobSuccess = () => {
+  return {
+    type: APPLY_JOB_SUCCESS,
+  };
+};
+
+const applyJobFailed = () => {};
+
+const applyJob = (studentId, jobId) => {
+  return async (dispatch) => {
+    dispatch(applyJobRequest());
+    const fd = new FormData();
+    fd.append("student_id", studentId);
+    fd.append("job_id", jobId);
+    const { data } = await axios.post("/student/job/apply", fd);
+    console.log(data);
+    if (data.success == 0) {
+      dispatch(applyJobFailed());
+      dispatch(notificationError(data.message));
+    }
+    if (data.success === 1) {
+      dispatch(applyJobSuccess());
+      dispatch(notificationSuccess(data.message));
+    }
+  };
+};
 
 const loginRequest = () => {
   return {
@@ -198,5 +236,5 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export { login, loadCourse, loadJobPostings, updateResume };
+export { login, loadCourse, loadJobPostings, updateResume, applyJob };
 export default reducer;
