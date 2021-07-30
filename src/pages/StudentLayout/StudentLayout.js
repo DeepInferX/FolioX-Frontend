@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Outlet, NavLink } from "react-router-dom";
 import {
   Grid,
@@ -22,13 +23,15 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import PersonIcon from "@material-ui/icons/Person";
 import SchoolIcon from "@material-ui/icons/School";
 import NavItem from "pages/Admin/Dashboard/NavBar/NavItem";
+import { loadJobPostings } from "store/student/index";
 
-const Test = () => {
+const Test = ({ jobs }) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
   };
+  console.log(jobs);
 
   return (
     <List>
@@ -55,10 +58,12 @@ const Test = () => {
         unmountOnExit
       >
         <List component="div" disablePadding>
-          <NavItem href={`jobs/id=1`} title="TCS - System Engineer" />
-          <NavItem href={`jobs/id=2`} title="Cognizant  - Ass. Engineer" />
-          <NavItem href={`jobs/id=3`} title="Amazon - SDE" />
-          <NavItem href={`jobs/id=4`} title="FreshWorks - SDE" />
+          {jobs?.map((job) => (
+            <NavItem
+              href={`jobs/id=${job.id}`}
+              title={`${job.company_name} - ${job.position}`}
+            />
+          ))}
         </List>
       </Collapse>
     </List>
@@ -66,6 +71,12 @@ const Test = () => {
 };
 
 const StudentLayout = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(loadJobPostings());
+  }, []);
+  const { name } = useSelector((store) => store.student);
+  const jobs = useSelector((store) => Object.values(store.student.jobs));
   return (
     <Grid container>
       <Grid
@@ -94,12 +105,12 @@ const StudentLayout = () => {
               <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
             </div>
             <p>
-              Hi, <b>Rishav God</b>{" "}
+              Hi, <b>{name}</b>{" "}
             </p>
           </div>
         </Grid>
         <Grid>
-          <Test />
+          <Test jobs={jobs} />
         </Grid>
       </Grid>
       <Grid item xs={10} style={{ background: "#F6F7FB" }}>

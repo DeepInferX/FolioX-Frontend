@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   ListItemS,
+  Button,
 } from "@material-ui/core";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import { List } from "@material-ui/icons";
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Job() {
+  console.log("hi");
   const classes = useStyles();
   return (
     <Box pr={25} mb={50}>
@@ -209,11 +211,66 @@ export default function Job() {
           <Box m={2}>
             <Typography>B.Tech</Typography>
             <Divider />
-            <Box>
-              <Grid></Grid>
-            </Box>
+            <ul
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                listStyle: "none",
+                justifyContent: "space-between",
+              }}
+            >
+              <li>
+                Minimum CGPA -
+                <span style={{ fontWeight: 700 }}> 8.5 and above</span>
+              </li>
+              <li>
+                Minimum Attendance -
+                <span style={{ fontWeight: 700 }}> 60%</span>
+              </li>
+              <li>
+                Minimum Acceptable Backlogs -
+                <span style={{ fontWeight: 700 }}> 3</span>
+              </li>
+            </ul>
           </Box>
         </Box>
+        <Box>
+          <Box m={2}>
+            <Typography>M.Tech</Typography>
+            <Divider />
+            <ul
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                listStyle: "none",
+                justifyContent: "space-between",
+              }}
+            >
+              <li>
+                Minimum CGPA -
+                <span style={{ fontWeight: 700 }}> 8.5 and above</span>
+              </li>
+              <li>
+                Minimum Attendance -
+                <span style={{ fontWeight: 700 }}> 60%</span>
+              </li>
+              <li>
+                Minimum Acceptable Backlogs -
+                <span style={{ fontWeight: 700 }}> 3</span>
+              </li>
+            </ul>
+          </Box>
+        </Box>
+      </Box>
+      <Box mt={8}>
+        <Grid container justify="flex-end" alignItems="center">
+          <Typography>Deadline is in 2 minutes and 40 seconds</Typography>
+          <Box ml={1}>
+            <Button variant="contained" color="primary">
+              Apply
+            </Button>
+          </Box>
+        </Grid>
       </Box>
     </Box>
   );

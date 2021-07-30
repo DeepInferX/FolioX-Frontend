@@ -66,15 +66,24 @@ const routes = [
   },
   {
     path: "student",
-    element: <StudentLayout />,
+    element: <PrivateRoute Component={StudentLayout}></PrivateRoute>,
     children: [
       {
         path: "/",
         element: <PrivateRoute Component={StudentDashboard}></PrivateRoute>,
       },
-      { path: "dashboard", element: <StudentDashboard /> },
-      { path: "resume", element: <Resume /> },
-      { path: "jobs/id=:id", element: <Job /> },
+      {
+        path: "dashboard",
+        element: <PrivateRoute Component={StudentDashboard}></PrivateRoute>,
+      },
+      {
+        path: "resume",
+        element: <PrivateRoute Component={Resume}></PrivateRoute>,
+      },
+      {
+        path: "jobs/id=:id",
+        element: <PrivateRoute Component={Job}></PrivateRoute>,
+      },
     ],
   },
   {

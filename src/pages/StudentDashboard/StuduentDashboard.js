@@ -1,10 +1,27 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Input from "components/CustomInput/Input";
-import { Formik, Form, FieldArray } from "formik";
-import { Typography, Divider, Box, Grid, Button } from "@material-ui/core";
+import { Formik, Form, FieldArray, useField } from "formik";
+import {
+  Typography,
+  Divider,
+  Box,
+  Grid,
+  Button,
+  Checkbox,
+  FormControlLabel,
+} from "@material-ui/core";
 import UpdateIcon from "@material-ui/icons/Update";
 import { useState } from "react";
+import { loadCourse, updateResume } from "store/student";
+import SelectFormik from "components/Select/SelectFormik";
 
-const PersonalDetails = ({ editing }) => {
+const Img = ({ ...props }) => {
+  const [field] = useField(props);
+  return <img width="80%" src={field.value} />;
+};
+
+const PersonalDetails = () => {
   return (
     <Box
       borderRadius={4}
@@ -25,7 +42,6 @@ const PersonalDetails = ({ editing }) => {
                 name="personalDetails.fullName"
                 variant="basic"
                 placeholder="Full Name"
-                disabled={!editing}
               />
             </Grid>
             <Grid item xs={6}>
@@ -33,7 +49,6 @@ const PersonalDetails = ({ editing }) => {
                 name="personalDetails.mobileNumber"
                 variant="basic"
                 placeholder="Mobile Number"
-                disabled={!editing}
               />
             </Grid>
 
@@ -42,32 +57,13 @@ const PersonalDetails = ({ editing }) => {
                 name="personalDetails.fatherName"
                 variant="basic"
                 placeholder="Father's Full Name"
-                disabled={!editing}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Input
-                name="personalDetails.mobileNumber"
-                variant="basic"
-                placeholder="Mobile Number"
-                disabled={!editing}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              <Input
-                name="personalDetails.fullName"
-                variant="basic"
-                placeholder="Full Name"
-                disabled={!editing}
               />
             </Grid>
             <Grid item xs={6}>
               <Input
                 name="personalDetails.registrationNo"
                 variant="basic"
-                placeholder="Registration No."
-                disabled={!editing}
+                placeholder="Registration Number"
               />
             </Grid>
 
@@ -76,7 +72,6 @@ const PersonalDetails = ({ editing }) => {
                 name="personalDetails.email"
                 variant="basic"
                 placeholder="Email"
-                disabled={!editing}
               />
             </Grid>
             <Grid item xs={6}>
@@ -84,15 +79,11 @@ const PersonalDetails = ({ editing }) => {
                 name="personalDetails.rollNo"
                 variant="basic"
                 placeholder="Roll No."
-                disabled={!editing}
               />
             </Grid>
           </Grid>
           <Grid item xs={4} container justify="center">
-            <img
-              width="80%"
-              src={process.env.PUBLIC_URL + "/assets/resume_image.svg"}
-            />
+            <Img width="80%" name="personalDetails.photoUrl" />
           </Grid>
         </Grid>
       </Box>
@@ -100,7 +91,16 @@ const PersonalDetails = ({ editing }) => {
   );
 };
 
-const UnderGraduateDetails = ({ editing }) => {
+const UnderGraduateDetails = ({ formik }) => {
+  const branches = useSelector((store) =>
+    Object.values(store.student.branches)
+  );
+
+  const getBranchesByCourseId = (courseId) => {
+    return branches.filter((branch) => branch.course_id === courseId);
+  };
+
+  const { values, handleChange, setFieldValue } = formik;
   return (
     <Box
       borderRadius={4}
@@ -120,7 +120,6 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.collegeName"
               variant="basic"
               placeholder="College Name(Full Name)"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -130,7 +129,6 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.collegeWebsite"
               variant="basic"
               placeholder="College Website"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}>
@@ -138,26 +136,39 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.averageSGPA"
               variant="basic"
               placeholder="Average SGPA"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
 
           <Grid item xs={4}>
-            <Input
-              name="ug.selectCourse"
+            <SelectFormik
+              name="ug.course"
               variant="basic"
-              placeholder="Select Course"
-              disabled={!editing}
-            />
+              onChange={(e) => {
+                const courseId = e.target.value;
+                const branches = getBranchesByCourseId(courseId);
+                setFieldValue("ug.course", courseId);
+                setFieldValue("ug.branches", []);
+                setFieldValue("ug.branches", branches);
+              }}
+            >
+              <option value="">Select Course</option>
+              {values.ug.courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.course_name}
+                </option>
+              ))}
+            </SelectFormik>
           </Grid>
           <Grid item xs={4}>
-            <Input
-              name="ug.selectBranch"
-              variant="basic"
-              placeholder="Select Branch"
-              disabled={!editing}
-            />
+            <SelectFormik name="ug.branch" variant="basic">
+              <option value="">Select Branch</option>
+              {values.ug.branches.map((branch) => (
+                <option value={branch.id} key={branch.id}>
+                  {branch.branch_name}
+                </option>
+              ))}
+            </SelectFormik>
           </Grid>
           <Grid item xs={4}></Grid>
 
@@ -166,7 +177,6 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.courseStartTime"
               variant="basic"
               placeholder="Course Start Time"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}>
@@ -174,7 +184,6 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.courseEndTime"
               variant="basic"
               placeholder="Course End Time"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -184,7 +193,6 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.gapInYear"
               variant="basic"
               placeholder="Gap in years (NA if not applicable)"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}>
@@ -192,7 +200,6 @@ const UnderGraduateDetails = ({ editing }) => {
               name="ug.numberOfBacklogs"
               variant="basic"
               placeholder="Number of Backlogs"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -202,7 +209,19 @@ const UnderGraduateDetails = ({ editing }) => {
   );
 };
 
-const PostGraduateDetails = ({ editing }) => {
+const PostGraduateDetails = ({ formik }) => {
+  const branches = useSelector((store) =>
+    Object.values(store.student.branches)
+  );
+
+  const getBranchesByCourseId = (courseId) => {
+    return branches.filter((branch) => branch.course_id === courseId);
+  };
+  const {
+    values: { pg },
+    setFieldValue,
+    ...rest
+  } = formik;
   return (
     <Box
       borderRadius={4}
@@ -211,7 +230,20 @@ const PostGraduateDetails = ({ editing }) => {
     >
       <Box mb={2}>
         <Box pl={1}>
-          <Typography variant="subtitle1">Undergraduate Detaills</Typography>
+          <Grid container alignItems="center" justify="space-between">
+            <Typography variant="subtitle1">Post Graduate Detaills</Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={pg.status == 3}
+                  onChange={(e) => setFieldValue("pg.status", !pg.status)}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="check this if not applicable"
+            />
+          </Grid>
         </Box>
         <Divider />
       </Box>
@@ -222,7 +254,7 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.collegeName"
               variant="basic"
               placeholder="College Name(Full Name)"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -232,7 +264,7 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.collegeWebsite"
               variant="basic"
               placeholder="College Website"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}>
@@ -240,26 +272,45 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.averageSGPA"
               variant="basic"
               placeholder="Average SGPA"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}></Grid>
 
           <Grid item xs={4}>
-            <Input
-              name="pg.selectCourse"
+            <SelectFormik
+              name="pg.course"
               variant="basic"
-              placeholder="Select Course"
-              disabled={!editing}
-            />
+              onChange={(e) => {
+                const courseId = e.target.value;
+                const branches = getBranchesByCourseId(courseId);
+                setFieldValue("pg.course", courseId);
+                setFieldValue("pg.branches", []);
+                setFieldValue("pg.branches", branches);
+              }}
+              disabled={pg.status == 3}
+            >
+              <option value="">Select Course</option>
+              {pg.courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.course_name}
+                </option>
+              ))}
+            </SelectFormik>
           </Grid>
           <Grid item xs={4}>
-            <Input
-              name="pg.selectBranch"
+            <SelectFormik
+              name="pg.branch"
               variant="basic"
-              placeholder="Select Branch"
-              disabled={!editing}
-            />
+              disabled={pg.status == 3}
+            >
+              <option value="">Select Branch</option>
+              {pg.branches.map((branch) => (
+                <option value={branch.id} key={branch.id}>
+                  {branch.branch_name}
+                </option>
+              ))}
+            </SelectFormik>
           </Grid>
           <Grid item xs={4}></Grid>
 
@@ -268,7 +319,7 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.courseStartTime"
               variant="basic"
               placeholder="Course Start Time"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}>
@@ -276,7 +327,7 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.courseEndTime"
               variant="basic"
               placeholder="Course End Time"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -286,7 +337,7 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.gapInYear"
               variant="basic"
               placeholder="Gap in years (NA if not applicable)"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}>
@@ -294,7 +345,7 @@ const PostGraduateDetails = ({ editing }) => {
               name="pg.numberOfBacklogs"
               variant="basic"
               placeholder="Number of Backlogs"
-              disabled={!editing}
+              disabled={pg.status == 3}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -304,7 +355,7 @@ const PostGraduateDetails = ({ editing }) => {
   );
 };
 
-const MatriculationDetails = ({ editing }) => {
+const MatriculationDetails = () => {
   return (
     <Box
       borderRadius={4}
@@ -321,28 +372,25 @@ const MatriculationDetails = ({ editing }) => {
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <Input
-              name="metric.schoolName"
+              name="matric.schoolName"
               variant="basic"
               placeholder="School / College Name (Full Name)"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
 
           <Grid item xs={4}>
             <Input
-              name="ug.percetageAchieved"
+              name="matric.percentageAcheived"
               variant="basic"
               placeholder="Percentage Acheived"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}>
             <Input
-              name="metric.yearOfPassing"
+              name="matric.yearOfPassing"
               variant="basic"
               placeholder="Year of passing"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -352,7 +400,7 @@ const MatriculationDetails = ({ editing }) => {
   );
 };
 
-const IntermediateDetails = ({ editing }) => {
+const IntermediateDetails = () => {
   return (
     <Box
       borderRadius={4}
@@ -369,28 +417,25 @@ const IntermediateDetails = ({ editing }) => {
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <Input
-              name="metric.schoolName"
+              name="inter.schoolName"
               variant="basic"
               placeholder="School / College Name (Full Name)"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
 
           <Grid item xs={4}>
             <Input
-              name="ug.percetageAchieved"
+              name="inter.percentageAcheived"
               variant="basic"
               placeholder="Percentage Acheived"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}>
             <Input
-              name="metric.yearOfPassing"
+              name="inter.yearOfPassing"
               variant="basic"
               placeholder="Year of passing"
-              disabled={!editing}
             />
           </Grid>
           <Grid item xs={4}></Grid>
@@ -400,7 +445,10 @@ const IntermediateDetails = ({ editing }) => {
   );
 };
 
-const Expreience = ({ editing, values }) => {
+const Expreience = ({ formik }) => {
+  const {
+    values: { expreience },
+  } = formik;
   return (
     <Box
       borderRadius={4}
@@ -422,87 +470,98 @@ const Expreience = ({ editing, values }) => {
             {(arrayHelpers) => {
               return (
                 <>
-                  {values.values.expreience.map((ex, index) => (
-                    <Grid container spacing={3}>
-                      <Grid item xs={8}>
-                        <Input
-                          name={`expreience.${index}.company`}
-                          variant="basic"
-                          placeholder="Company Name"
-                          disabled={!editing}
-                        />
-                      </Grid>
-                      <Grid item xs={4}></Grid>
+                  {expreience.map((ex, index) => (
+                    <Box pb={5}>
+                      <Grid container spacing={3}>
+                        <Grid item xs={8}>
+                          <Input
+                            name={`expreience.${index}.company_name`}
+                            variant="basic"
+                            placeholder="Company Name"
+                          />
+                        </Grid>
+                        <Grid item xs={4}></Grid>
 
-                      <Grid item xs={4}>
-                        <Input
-                          name={`expreience.${index}.startingTime`}
-                          variant="basic"
-                          placeholder="Starting Time"
-                          disabled={!editing}
-                        />
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Input
-                          name={`expreience.${index}.endTime`}
-                          variant="basic"
-                          placeholder="Ending Time"
-                          disabled={!editing}
-                        />
-                      </Grid>
-                      <Grid item xs={4}></Grid>
+                        <Grid item xs={4}>
+                          <Input
+                            name={`expreience.${index}.starting_date`}
+                            variant="basic"
+                            placeholder="Starting Time"
+                          />
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Input
+                            name={`expreience.${index}.ending_date`}
+                            variant="basic"
+                            placeholder="Ending Time"
+                          />
+                        </Grid>
+                        <Grid item xs={4}></Grid>
 
-                      <Grid item xs={4}>
-                        <Input
-                          name={`expreience.${index}.JobType`}
-                          variant="basic"
-                          placeholder="Job Type"
-                          disabled={!editing}
-                        />
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Input
-                          name={`expreience.${index}.jobLocation`}
-                          variant="basic"
-                          placeholder="Job Location"
-                          disabled={!editing}
-                        />
-                      </Grid>
-                      <Grid item xs={4}></Grid>
+                        <Grid item xs={4}>
+                          <SelectFormik
+                            variant="basic"
+                            name={`expreience.${index}.job_type`}
+                          >
+                            <option value="">Selct Job Type</option>
+                            <option value="1">Fulltime</option>
+                            <option value="2">Part-Time</option>
+                            <option value="3">Freelance</option>
+                            <option value="4">Internship</option>
+                            <option value="5">Contract</option>
+                          </SelectFormik>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Input
+                            name={`expreience.${index}.job_loc`}
+                            variant="basic"
+                            placeholder="Job Location"
+                          />
+                        </Grid>
+                        <Grid item xs={4}></Grid>
 
-                      <Grid item xs={8}>
-                        <Input
-                          name={`expreience.${index}.jobDescription`}
-                          variant="basic"
-                          placeholder="Job Description"
-                          disabled={!editing}
-                          multiline
-                          rows={5}
-                        />
+                        <Grid item xs={8}>
+                          <Input
+                            name={`expreience.${index}.job_desc`}
+                            variant="basic"
+                            placeholder="Job Description"
+                            multiline
+                            rows={5}
+                          />
+                          <Box mt={1}>
+                            <Button
+                              style={{ backgroundColor: "#F6F7FB" }}
+                              variant="contained"
+                              onClick={() => arrayHelpers.remove(index)}
+                            >
+                              {ex.id ? "Remove" : "Cancel"}
+                            </Button>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={4}></Grid>
                       </Grid>
-                      <Grid item xs={4}></Grid>
-                    </Grid>
+                    </Box>
                   ))}
-
-                  <Box mt={4}>
+                  <Grid container justify="flex-end">
                     <Button
                       variant="contained"
                       color="primary"
-                      disabled={!editing}
                       onClick={() =>
                         arrayHelpers.push({
-                          company: "",
-                          startingTime: "",
-                          endingTime: "",
-                          jobType: "",
-                          jobLocation: "",
-                          jobDescription: "",
+                          student_id: "1",
+                          company_name: "",
+                          starting_date: "",
+                          ending_date: "",
+                          job_type: "",
+                          job_loc: "",
+                          job_desc: "",
+                          verified_by_admin: "0",
                         })
                       }
                     >
                       Add More
                     </Button>
-                  </Box>
+                  </Grid>
                 </>
               );
             }}
@@ -512,159 +571,133 @@ const Expreience = ({ editing, values }) => {
     </Box>
   );
 };
-const Test = ({ values }) => {
-  return (
-    <Form>
-      <FieldArray name="expreience">
-        {(arrayHelpers) => {
-          console.log("values", values);
-          console.log("arrayHelpers", arrayHelpers);
-          return <h1>st</h1>;
-        }}
-      </FieldArray>
-    </Form>
-  );
-};
+
 export default function StudentDashboard() {
-  const [editing, setEditing] = useState(false);
+  const student = useSelector((store) => store.student);
+  const courses = useSelector((store) => Object.values(store.student.courses));
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(loadCourse(1));
+  }, []);
   const initialValues = {
     personalDetails: {
-      fullName: "",
-      mobileNumber: "",
-      fatherName: "",
-      registrationNo: "",
-      email: "",
-      rollNo: "",
+      fullName: student.name,
+      mobileNumber: student.mobile,
+      fatherName: student.father_name,
+      registrationNo: student.reg_no,
+      email: student.email,
+      rollNo: student.roll_no,
+      photoUrl: `http://foliox.deepinferx.in/web/assets/${student.photo_url}`,
     },
     ug: {
-      collegeName: "",
-      collegeWebsite: "",
-      averageSGPA: "",
-      selectCourse: "",
-      selectBranch: "",
-      courseStartTime: "",
-      courseEndTime: "",
-      gapInYear: "",
-      numberOfBacklogs: "",
+      collegeName: student.student_ug_details.college_name,
+      collegeWebsite: student.student_ug_details.college_website,
+      averageSGPA: student.student_ug_details.avg_sgpa,
+      course: "",
+      branch: "",
+      courses: courses,
+      branches: [],
+      courseStartTime: student.student_ug_details.course_start,
+      courseEndTime: student.student_ug_details.course_end,
+      gapInYear: student.student_ug_details.gap_in_years,
+      numberOfBacklogs: student.student_ug_details.no_of_backlogs,
     },
     pg: {
+      status: student.pg_details,
       collegeName: "",
       collegeWebsite: "",
       averageSGPA: "",
-      selectCourse: "",
-      selectBranch: "",
+      course: "",
+      branch: "",
+      courses: courses,
+      branches: [],
       courseStartTime: "",
       courseEndTime: "",
       gapInYear: "",
       numberOfBacklogs: "",
     },
     matric: {
-      schoolName: "",
-      percentageAcheived: "",
-      yearOfPassing: "",
+      schoolName: student.student_matric_and_inter_details.mat_school_name,
+      percentageAcheived:
+        student.student_matric_and_inter_details.mat_percentage,
+      yearOfPassing:
+        student.student_matric_and_inter_details.mat_year_of_passing,
     },
     inter: {
-      schoolName: "",
-      percentageAcheived: "",
-      yearOfPassing: "",
+      schoolName: student.student_matric_and_inter_details.inter_school_name,
+      percentageAcheived:
+        student.student_matric_and_inter_details.inter_percentage,
+      yearOfPassing:
+        student.student_matric_and_inter_details.inter_year_of_passing,
     },
-    expreience: [
-      {
-        company: "",
-        startingTime: "",
-        endingTime: "",
-        jobType: "",
-        jobLocation: "",
-        jobDescription: "",
-      },
-    ],
+    expreience: student.student_work_experience,
   };
   return (
-    <Formik initialValues={initialValues}>
-      {(values) => {
+    <Formik
+      initialValues={initialValues}
+      onSubmit={(values) => dispatch(updateResume(values, student.id))}
+    >
+      {(formik) => {
         return (
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                variant="h4"
-                style={{
-                  // fontFamily: "Poppins",
-                  fontStyle: "normal",
-                  fontWeight: "bold",
-                  fontSize: "31px",
-                  lineHeight: "46px",
-                }}
-              >
-                Your Resume
-              </Typography>
-              <Typography
-                variant="subtitle1"
-                style={{
-                  // font-family: Poppins;
-                  fontStyle: "normal",
-                  fontWeight: "normal",
-                  fontHeight: "97.6%",
-                }}
-              >
-                Since you have logged in, you can update your resume at any
-                time. We suggest you to do so before appling for jobs.
-              </Typography>
-              <Typography
-                variant="caption"
-                styel={{
-                  fontStyle: "normal",
-                  fontWeight: "300",
-                  fontHeight: "97.6%",
-                }}
-              >
-                Please fill in all the required infomation, it will help us to
-                recommend you internships and job postings even better. In case
-                of any discrepancy or invalid data provided, your account will
-                be suspended immediately.
-              </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <PersonalDetails editing={editing} />
-              <UnderGraduateDetails editing={editing} />
-              <PostGraduateDetails editing={editing} />
-              <MatriculationDetails editing={editing} />
-              <IntermediateDetails editing={editing} />
-              <Expreience editing={editing} values={values} />
-              <Grid container justify="flex-end">
-                <Box my={5}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    disabled={!editing}
-                    style={{ marginRight: "16px" }}
-                    onClick={() => setEditing((editing) => !editing)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={!editing}
-                  >
-                    Apply for changes
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-            <Grid item xs={4}>
-              <Grid container justify="center">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<UpdateIcon>send</UpdateIcon>}
-                  onClick={() => setEditing((editing) => !editing)}
-                  disabled={editing}
+          <Form>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography
+                  variant="h4"
+                  style={{
+                    fontStyle: "normal",
+                    fontWeight: "bold",
+                    fontSize: "31px",
+                    lineHeight: "46px",
+                  }}
                 >
-                  Update
-                </Button>
+                  Your Resume
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  style={{
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    fontHeight: "97.6%",
+                  }}
+                >
+                  Since you have logged in, you can update your resume at any
+                  time. We suggest you to do so before appling for jobs.
+                </Typography>
+                <Typography
+                  variant="caption"
+                  styel={{
+                    fontStyle: "normal",
+                    fontWeight: "300",
+                    fontHeight: "97.6%",
+                  }}
+                >
+                  Please fill in all the required infomation, it will help us to
+                  recommend you internships and job postings even better. In
+                  case of any discrepancy or invalid data provided, your account
+                  will be suspended immediately.
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <PersonalDetails />
+                <UnderGraduateDetails formik={formik} />
+                <PostGraduateDetails formik={formik} />
+                <MatriculationDetails />
+                <IntermediateDetails />
+                <Expreience formik={formik} />
+                <Grid container justify="flex-end">
+                  <Box my={5}>
+                    <Button type="submit" variant="contained" color="primary">
+                      Apply for changes
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <Grid container justify="center"></Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Form>
         );
       }}
     </Formik>
