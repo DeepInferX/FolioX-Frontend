@@ -4,13 +4,10 @@ import {
   Typography,
   Divider,
   makeStyles,
-  ListItem,
-  ListItemText,
-  ListItemS,
   Button,
 } from "@material-ui/core";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import { List } from "@material-ui/icons";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Job() {
-  console.log("hi");
+  const jobId = useParams().id;
+  const job = useSelector((store) => store.student.jobs[jobId]);
   const classes = useStyles();
   return (
     <Box pr={25} mb={50}>
@@ -41,9 +39,15 @@ export default function Job() {
           <Divider />
         </Grid>
         <Grid container justify="center">
-          <Grid item xs={4}>
-            <img src={process.env.PUBLIC_URL + "/assets/job.svg"} />
-          </Grid>
+          <Grid
+            item
+            xs={4}
+            style={{
+              backgroundImage: `url(${job.company_logo_url})`,
+              backgroundPosition: "center center",
+              backgroundSize: "cover",
+            }}
+          ></Grid>
           <Grid item xs={7}>
             <Box>
               <ul
@@ -54,9 +58,7 @@ export default function Job() {
               >
                 <li style={{ marginTop: "10px" }}>
                   Position -{" "}
-                  <span style={{ fontWeight: 700 }}>
-                    Software Development Engineer
-                  </span>
+                  <span style={{ fontWeight: 700 }}>{job.position}</span>
                 </li>
                 <li style={{ marginTop: "10px" }}>
                   Position Type -{" "}
@@ -64,7 +66,7 @@ export default function Job() {
                 </li>
                 <li style={{ marginTop: "10px" }}>
                   Company / Firm Name -{" "}
-                  <span style={{ fontWeight: 700 }}> Goldman Sachs</span>
+                  <span style={{ fontWeight: 700 }}>{job.company_name}</span>
                 </li>
                 <li style={{ marginTop: "10px" }}>
                   Sector -{" "}

@@ -577,7 +577,7 @@ export default function StudentDashboard() {
   const courses = useSelector((store) => Object.values(store.student.courses));
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(loadCourse(1));
+    dispatch(loadCourse(student.id));
   }, []);
   const initialValues = {
     personalDetails: {
